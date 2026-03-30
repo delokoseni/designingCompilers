@@ -62,7 +62,6 @@ typedef char type_lex[maxLex];
 #define MAX_TYPE_TERMINAL 200
 
 // Не терминалы
-
 #define N_PROGRAM 300
 #define N_DESCRIPTION 301
 #define N_TYPE 302
