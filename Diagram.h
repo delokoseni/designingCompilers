@@ -21,6 +21,7 @@ private:
     int LookForward(int pointer);
     int Scan(type_lex lex);
     void DeltaOperation(int delta);
+    void PrintStack();
 
 public:
     Diagram(Scaner* scaner, Translate *translate);

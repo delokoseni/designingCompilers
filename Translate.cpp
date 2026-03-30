@@ -24,13 +24,13 @@ void Translate::deltaEndDeclareData() {
 }
 
 void Translate::deltaSetId() {
-    if (tree->checkDuplicate(SemanticTree::curNode, global->prevLex)) {
-        tree->printError("duplicate identifier", global->prevLex);
-        return;
+    if (!tree->checkDuplicate(SemanticTree::curNode, global->prevLex)) {
+        // Вставляем идентификатор в дерево
+        global->identPtr = tree->semInclude(global->prevLex, OBJ_VAR);
+        tree->semSetType(global->identPtr, global->dataType);
+    } else {
+        tree->printError("[Translate] duplicate identifier", global->prevLex);
     }
-
-    global->identPtr = tree->semInclude(global->prevLex, OBJ_VAR);
-    tree->semSetType(global->identPtr, global->dataType);
 }
 
 void Translate::deltaFindId() {
@@ -273,4 +273,8 @@ void Translate::deltaCheckBinaryOp() {
     // Пометка, что оператор обработан
     // Для этого у нас пока есть setNodeId как единственный публичный метод к Node
     cur->setNodeId(global->prevLex); // Можно сохранять лексему как "инициализированный" оператор
+}
+
+GlobalData* Translate::getGlobal() {
+    return global;
 }

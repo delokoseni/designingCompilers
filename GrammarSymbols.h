@@ -56,7 +56,7 @@ typedef char type_lex[maxLex];
 
 // Служебные
 #define typeEnd 100
-#define typeError 404
+#define typeError 199
 
 // Граница терминалов
 #define MAX_TYPE_TERMINAL 200

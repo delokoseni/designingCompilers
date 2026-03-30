@@ -71,4 +71,5 @@ public:
     void deltaPushOperator();
     void deltaProcessOperator();
     void deltaCheckBinaryOp();
+    GlobalData* getGlobal();
 };
