@@ -22,7 +22,7 @@ void Translate::deltaSetId() {
     if (!this->tree->checkDuplicate(SemanticTree::curNode, this->global->prevLex)) {
 
         this->global->identPtr = this->tree->semInclude(this->global->prevLex, OBJ_VAR);
-        this->tree->semSetType(global->identPtr, this->global->dataType);
+        this->tree->semSetType(global->identPtr, this->global->dataType); // Не работает
     }
     else {
         this->tree->printError("detected duplicate of identifier", this->global->prevLex);
@@ -243,7 +243,7 @@ void Translate::deltaCheckBinaryOp() {
     SemanticTree* rightOperand = nullptr;
 
     // Проверяем, есть ли уже правый узел, если нет — создаём
-    rightOperand = cur->semAddNode(); // semAddNode возвращает предыдущий узел, но создаёт новый справа
+    rightOperand = cur->semAddNode();
     if (!rightOperand) {
         tree->printError("right operand not found for operator", global->prevLex);
         return;

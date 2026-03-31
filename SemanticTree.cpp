@@ -244,9 +244,9 @@ void SemanticTree::print()
 {
     std::string idName = (node->id[0] == '\0') ? "____" : node->id;
 
-    std::cout << "Node " << idName
-        << " (" << getStringType(node->dataType)
-        << ", " << getStringTypeObj(node->objType) << ")";
+    std::cout << "Node " << idName << " ("
+        //<< getStringType(node->dataType) << ", "
+        << getStringTypeObj(node->objType) << ")";
 
     if (left) std::cout << " -> L:" << left->node->id;
     if (right) std::cout << " -> R:" << right->node->id;

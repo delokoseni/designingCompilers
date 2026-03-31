@@ -108,10 +108,10 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		if (lookahead == typeInt || lookahead == typeShort ||
 			lookahead == typeLong || lookahead == typeFloat)
 		{
-			Push(DELTA_END_DECLARE_DATA);
+			Push(DELTA_END_DECLARE_DATA); //Нет
 			Push(N_PROGRAM);    
 			Push(N_DESCRIPTION); 
-			Push(DELTA_START_DECLARE_DATA);
+			Push(DELTA_START_DECLARE_DATA); //Нет
 		}
 		else if (lookahead == typeEnd || lookahead == typeRightBrace)
 		{
@@ -129,7 +129,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			lookahead == typeLong || lookahead == typeFloat)
 		{
 			Push(N_DESCRIPTION1);
-			Push(DELTA_SET_ID);
+			Push(DELTA_SET_ID); //Вызывает проблемы
 			Push(N_IDENTIFIER);
 			Push(N_TYPE);
 		}
@@ -173,7 +173,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		type_lex lex; // для ошибок
 		if (lookahead == typeInt || lookahead == typeShort || lookahead == typeLong || lookahead == typeFloat)
 		{
-			Push(DELTA_START_DECLARE_DATA);
+			Push(DELTA_START_DECLARE_DATA); //Отличается
 			Push(lookahead); 
 		}
 		else
@@ -206,9 +206,9 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	case N_VARIABLE1: // <переменная1> → =<выражение> | ε
 		if (lookahead == typeEval) // =
 		{
-			Push(DELTA_ASSIGN_END);
+			Push(DELTA_ASSIGN_END); //Нет
 			Push(N_EXPRESSION);
-			Push(DELTA_ASSIGN_START);
+			Push(DELTA_ASSIGN_START); //Нет
 			Push(typeEval);
 		}
 		else if (lookahead == typeComma || lookahead == typeSemicolon)
@@ -227,7 +227,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		{
 			Push(N_LIST);
 			Push(N_VARIABLE);
-			Push(typeComma);
+			Push(typeComma); //Есть дополнительная дельта
 		}
 		else if (lookahead == typeSemicolon)
 		{
@@ -243,10 +243,10 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	case N_ASSIGNMENT: // <присваивание> → <идентификатор> △findId △assignStart = <выражение> △assignEnd
 		if (lookahead == typeId)
 		{
-			Push(DELTA_ASSIGN_END);
+			Push(DELTA_ASSIGN_END); //Нет
 			Push(N_EXPRESSION);
 			Push(typeEval);
-			Push(DELTA_ASSIGN_START);
+			Push(DELTA_ASSIGN_START); //Нет
 			Push(DELTA_FIND_ID);
 			Push(N_IDENTIFIER);
 		}
@@ -259,29 +259,24 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 
 	case N_EXPRESSION: // <выражение> → <сравнение> △pushOperand <выражение1>
 		Push(N_EXPRESSION1);
-		Push(DELTA_PUSH_OPERAND);
+		//Push(DELTA_PUSH_OPERAND); //Нет
 		Push(N_COMPARISON);
 		break;
 
 	case N_EXPRESSION1: // <выражение1> → == △pushOperator <сравнение> △processOperator <выражение1> | != △pushOperator <сравнение> △processOperator <выражение1> | ε
 	    if (lookahead == typeEq)   // ==
 	    {
-	        // Сначала ставим рекурсию для следующей части
 	        Push(N_EXPRESSION1);
-
-	        // Затем сравнение
 	        Push(N_COMPARISON);
-
-	        // Потом сам оператор — чтобы обработать его как дельту
-	        Push(DELTA_PUSH_OPERATOR);   // новая дельта для оператора
-	        Push(typeEq);                // сам оператор
+	        //Push(DELTA_PUSH_OPERATOR); // Нет
+	        Push(typeEq);
 	    }
 	    else if (lookahead == typeUnEq) // !=
 	    {
 	        Push(N_EXPRESSION1);
 	        Push(N_COMPARISON);
-	        Push(DELTA_PUSH_OPERATOR);   // дельта
-	        Push(typeUnEq);              // сам оператор
+	        //Push(DELTA_PUSH_OPERATOR);   // Нет
+	        Push(typeUnEq);
 	    }
 	    else
 	    {
@@ -289,10 +284,10 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    }
 	    break;
 	case N_COMPOSITE_OPERATOR: // <составной оператор> → { △enterBlock <операторы и описания> } △exitBlock
-		Push(DELTA_EXIT_BLOCK);
+		Push(DELTA_EXIT_BLOCK); //По другому
 		Push(typeRightBrace);
 		Push(N_OPERATORS_AND_DESCRIPTIONS);
-		Push(DELTA_ENTER_BLOCK);
+		Push(DELTA_ENTER_BLOCK); //По другому
 		Push(typeLeftBrace);
 		break;
 
@@ -345,7 +340,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		// return expr ;
 		else if (lookahead == typeReturn)
 		{
-			Push(DELTA_CHECK_RETURN);
+			Push(DELTA_CHECK_RETURN); //Нет и многое иначе
 			Push(typeSemicolon);
 			Push(N_EXPRESSION);
 			Push(typeReturn);
@@ -434,27 +429,27 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		{
 			Push(typeRightBracket);
 			Push(typeLeftBracket);
-			Push(DELTA_CALL_FUNCTION);
+			Push(DELTA_CALL_FUNCTION); //Другая дельта
 			Push(DELTA_FIND_ID);
 			Push(N_IDENTIFIER);
 		}
 		break;
 
 	case N_COMPARISON: // <сравнение> → <побитовый сдвиг> △pushOperand <сравнение1>
-	    Push(DELTA_PUSH_OPERAND); // дельта для операнда
-	    Push(N_COMPARISON1);       // продолжение грамматики
-	    Push(N_BITWISE_SHIFT);     // сначала обрабатываем побитовый сдвиг
+	    //Push(DELTA_PUSH_OPERAND); // Нет
+	    Push(N_COMPARISON1);
+	    Push(N_BITWISE_SHIFT);
 	    break;
 
 	case N_COMPARISON1: // <сравнение1> → < | > | <= | >= <побитовый сдвиг> <сравнение1> | ε
 	    if (lookahead == typeLess || lookahead == typeMore ||
 	        lookahead == typeLessOrEq || lookahead == typeMoreOrEq)
 	    {
-	        Push(N_COMPARISON1);        // рекурсивно продолжаем <сравнение1>
-	        Push(DELTA_PROCESS_OPERATOR); // обработка оператора после сдвига
-	        Push(N_BITWISE_SHIFT);      // разбор побитового сдвига
-	        Push(DELTA_PUSH_OPERATOR);  // создаём узел оператора в дереве
-	        Push(lookahead);             // сам символ оператора
+	        Push(N_COMPARISON1);
+	        //Push(DELTA_PROCESS_OPERATOR); // Нет
+	        Push(N_BITWISE_SHIFT);
+	        //Push(DELTA_PUSH_OPERATOR);  // Нет
+	        Push(lookahead);
 	    }
 	    else
 	    {
@@ -463,19 +458,19 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    break;
 	case N_BITWISE_SHIFT: // <побитовый сдвиг> → <слагаемое> △pushOperand <побитовый сдвиг1>
 	    Push(N_BITWISE_SHIFT1);
-	    Push(DELTA_PUSH_OPERAND);
+	    //Push(DELTA_PUSH_OPERAND);
 	    Push(N_SUMMAND);
 	    break;
 
 	case N_BITWISE_SHIFT1:
 	    if (lookahead == typeBitwiseLeft || lookahead == typeBitwiseRight)
 	    {
-	        Push(N_BITWISE_SHIFT1);           // рекурсивно продолжаем разбор сдвига
-	        Push(DELTA_PROCESS_OPERATOR);     // после слагаемого будем обработку предыдущего оператора
-	        Push(DELTA_CHECK_BINARY_OP);      // проверка типа бинарного оператора
-	        Push(N_SUMMAND);                  // разбор слагаемого
-	        Push(DELTA_PUSH_OPERATOR);        // вставляем оператор << или >>
-	        Push(lookahead);                  // сам оператор
+	        Push(N_BITWISE_SHIFT1);
+	        //Push(DELTA_PROCESS_OPERATOR);     // Не было бы
+	        //Push(DELTA_CHECK_BINARY_OP);    // Не знаю
+	        Push(N_SUMMAND);
+	        //Push(DELTA_PUSH_OPERATOR);        // Не было бы
+	        Push(lookahead);
 	    }
 	    else
 	    {
@@ -485,7 +480,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 
 	case N_SUMMAND: // <слагаемое> → <множитель> △pushOperand <слагаемое1>
 		Push(N_SUMMAND1);
-		Push(DELTA_PUSH_OPERAND);
+		//Push(DELTA_PUSH_OPERAND); // Нет
 		Push(N_MULTIPLIER); 
 		break;
 
@@ -493,9 +488,9 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		if (lookahead == typePlus || lookahead == typeMinus)
 		{
 			Push(N_SUMMAND1);
-			Push(DELTA_PROCESS_OPERATOR);
+			//Push(DELTA_PROCESS_OPERATOR); // Нет
 			Push(N_MULTIPLIER);
-			Push(DELTA_PUSH_OPERATOR);
+			//Push(DELTA_PUSH_OPERATOR); // Нет
 			Push(lookahead);   
 		}
 		else
@@ -506,7 +501,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 
 	case N_MULTIPLIER: // <множитель> → <унарная операция> △pushOperand <множитель1>
 		Push(N_MULTIPLIER1);
-		Push(DELTA_PUSH_OPERAND);
+		//Push(DELTA_PUSH_OPERAND); // Нет
 		Push(N_UNARY_OPERATION);  
 		break;
 
@@ -514,9 +509,9 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    if (lookahead == typeMul || lookahead == typeDiv || lookahead == typeMod)
 	    {
 	        Push(N_MULTIPLIER1);
-	        Push(DELTA_PROCESS_OPERATOR);
+	        //Push(DELTA_PROCESS_OPERATOR); // Нет
 	        Push(N_UNARY_OPERATION);
-	        Push(DELTA_PUSH_OPERATOR);
+	        //Push(DELTA_PUSH_OPERATOR); // Нет
 	        Push(lookahead);
 	    }
 	    else
