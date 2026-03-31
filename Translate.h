@@ -28,7 +28,7 @@ public:
     Translate();
 
     void setTree(SemanticTree*);
-    void setLex(int, type_lex);
+    //void setLex(int, type_lex);
 
     // типы
     void deltaStartDeclareData();
@@ -72,4 +72,5 @@ public:
     void deltaProcessOperator();
     void deltaCheckBinaryOp();
     GlobalData* getGlobal();
+    void setLex(int term, type_lex lex);
 };

@@ -60,9 +60,7 @@ int Diagram::Run()
 	Push(N_PROGRAM);
 
 	term = scaner->UseScaner(lex);
-	if (term == typeId) { // typeId — это твой терминал для идентификаторов
-		strcpy_s(translate->getGlobal()->prevLex, maxLex, lex);
-	}
+	translate->setLex(term, lex);
 
 	while (!mag.empty())
 	{
@@ -79,6 +77,7 @@ int Diagram::Run()
 					return 1;
 
 				term = scaner->UseScaner(lex);
+				translate->setLex(term, lex);
 			}
 			else
 			{
