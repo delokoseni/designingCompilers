@@ -128,10 +128,10 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		if (lookahead == typeInt || lookahead == typeShort ||
 			lookahead == typeLong || lookahead == typeFloat)
 		{
-			Push(N_DESCRIPTION1); 
+			Push(N_DESCRIPTION1);
 			Push(DELTA_SET_ID);
-			Push(N_IDENTIFIER);  
-			Push(N_TYPE);         
+			Push(N_IDENTIFIER);
+			Push(N_TYPE);
 		}
 		else
 		{

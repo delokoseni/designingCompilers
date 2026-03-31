@@ -28,7 +28,6 @@ public:
     Translate();
 
     void setTree(SemanticTree*);
-    //void setLex(int, type_lex);
 
     // типы
     void deltaStartDeclareData();

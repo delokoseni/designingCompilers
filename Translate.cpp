@@ -9,11 +9,6 @@ void Translate::setTree(SemanticTree* t) {
     tree = t;
 }
 
-/*void Translate::setLex(int term, type_lex lex) {
-    global->prevTerm = term;
-    strcpy_s(global->prevLex, lex);
-}*/
-
 void Translate::deltaStartDeclareData() {
     global->flagDeclaration = true;
     global->dataType = tree->findDataType(global->prevTerm);
@@ -23,16 +18,6 @@ void Translate::deltaEndDeclareData() {
     global->flagDeclaration = false;
 }
 
-/*void Translate::deltaSetId() {
-    if (!tree->checkDuplicate(SemanticTree::curNode, global->prevLex)) {
-        // Вставляем идентификатор в дерево
-        global->identPtr = tree->semInclude(global->prevLex, OBJ_VAR);
-        tree->semSetType(global->identPtr, global->dataType);
-    } else {
-        tree->printError("[Translate] duplicate identifier", global->prevLex);
-    }
-}*/
-
 void Translate::deltaSetId() {
     if (!this->tree->checkDuplicate(SemanticTree::curNode, this->global->prevLex)) {
 
@@ -40,7 +25,7 @@ void Translate::deltaSetId() {
         this->tree->semSetType(global->identPtr, this->global->dataType);
     }
     else {
-        this->tree->printError("[Translate] detected duplicate of identifier", this->global->prevLex);
+        this->tree->printError("detected duplicate of identifier", this->global->prevLex);
     }
 }
 
