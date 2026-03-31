@@ -495,7 +495,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			Push(N_SUMMAND1);
 			Push(DELTA_PROCESS_OPERATOR);
 			Push(N_MULTIPLIER);
-			Push(DELTA_PROCESS_OPERATOR);
+			Push(DELTA_PUSH_OPERATOR);
 			Push(lookahead);   
 		}
 		else
