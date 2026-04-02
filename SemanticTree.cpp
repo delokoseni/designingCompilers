@@ -117,7 +117,6 @@ bool SemanticTree::checkDuplicate(SemanticTree* addr, type_lex lex)
 
 SemanticTree* SemanticTree::semInclude(type_lex lex, TYPE_OBJECT t)
 {
-    std::cout << "ADD: " << lex << " type=" << t << std::endl;
     if (checkDuplicate(curNode, lex))
     {
         printError("duplicate identifier", lex);
