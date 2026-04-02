@@ -278,7 +278,7 @@ GlobalData* Translate::getGlobal() {
 void Translate::setLex(int term, type_lex lex) {
     global->prevTerm = term;
 
-    if (term == typeId) {
+    if (term == typeId || term == typeMain) {
         strcpy_s(global->prevLex, maxLex, lex);
     }
 }

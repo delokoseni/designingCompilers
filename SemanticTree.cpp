@@ -74,7 +74,7 @@ SemanticTree* SemanticTree::findRightLeft(type_lex id)
     return findRightLeft(curNode, id);
 }
 
-SemanticTree* SemanticTree::findUpOneLevel(SemanticTree* from, type_lex id)
+/*SemanticTree* SemanticTree::findUpOneLevel(SemanticTree* from, type_lex id)
 {
     SemanticTree* cur = from;
 
@@ -84,6 +84,27 @@ SemanticTree* SemanticTree::findUpOneLevel(SemanticTree* from, type_lex id)
             return cur;
 
         cur = cur->up;
+    }
+
+    return nullptr;
+}*/
+
+SemanticTree* SemanticTree::findUpOneLevel(SemanticTree* from, type_lex id)
+{
+    if (!from) return nullptr;
+
+    SemanticTree* parent = from->up;
+    if (!parent) return nullptr;
+
+    // идём по всем детям текущего блока (через left/right)
+    SemanticTree* cur = parent->left;
+
+    while (cur)
+    {
+        if (cur->node && strcmp(cur->node->id, id) == 0)
+            return cur;
+
+        cur = cur->right;
     }
 
     return nullptr;

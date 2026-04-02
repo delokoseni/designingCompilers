@@ -129,7 +129,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			lookahead == typeLong || lookahead == typeFloat)
 		{
 			Push(N_DESCRIPTION1);
-			Push(DELTA_SET_ID); //Вызывает проблемы
+			//Push(DELTA_SET_ID); //Вызывает проблемы
 			Push(N_IDENTIFIER);
 			Push(N_TYPE);
 		}
@@ -160,6 +160,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			Push(typeSemicolon);
 			Push(N_LIST);
 			Push(N_VARIABLE1);
+			Push(DELTA_SET_ID);
 		}
 		else
 		{
