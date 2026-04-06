@@ -577,124 +577,208 @@ void Diagram::DeltaOperation(int delta)
 {
 	switch (delta)
 	{
-	case DELTA_START_DECLARE_DATA:
-		translate->deltaStartDeclareData();
-		Pop();
-		break;
+		case DELTA_START_DECLARE_DATA:
+			translate->deltaStartDeclareData();
+			Pop();
+			break;
 
-	case DELTA_END_DECLARE_DATA:
-		translate->deltaEndDeclareData();
-		Pop();
-		break;
+		case DELTA_END_DECLARE_DATA:
+			translate->deltaEndDeclareData();
+			Pop();
+			break;
 
-	case DELTA_SET_ID:
-		translate->deltaSetId();
-		Pop();
-		break;
+		case DELTA_SET_ID:
+			translate->deltaSetId();
+			Pop();
+			break;
 
-	case DELTA_FIND_ID:
-		translate->deltaFindId();
-		Pop();
-		break;
+		case DELTA_FIND_ID:
+			translate->deltaFindId();
+			Pop();
+			break;
 
-	case DELTA_SET_FUNC:
-		translate->deltaSetFunction();
-		Pop();
-		break;
+		case DELTA_SET_FUNC:
+			translate->deltaSetFunction();
+			Pop();
+			break;
 
-	case DELTA_END_FUNC:
-		translate->deltaEndFunction();
-		Pop();
-		break;
+		case DELTA_END_FUNC:
+			translate->deltaEndFunction();
+			Pop();
+			break;
 
-	case DELTA_ENTER_BLOCK:
-		translate->deltaEnterBlock();
-		Pop();
-		break;
+		case DELTA_ENTER_BLOCK:
+			translate->deltaEnterBlock();
+			Pop();
+			break;
 
-	case DELTA_EXIT_BLOCK:
-		translate->deltaExitBlock();
-		Pop();
-		break;
+		case DELTA_EXIT_BLOCK:
+			translate->deltaExitBlock();
+			Pop();
+			break;
 
-	case DELTA_CHECK_TYPE:
-		translate->deltaCheckType();
-		Pop();
-		break;
+		case DELTA_CHECK_TYPE:
+			translate->deltaCheckType();
+			Pop();
+			break;
 
-	case DELTA_CHECK_RETURN:
-		translate->deltaCheckReturn();
-		Pop();
-		break;
+		case DELTA_CHECK_RETURN:
+			translate->deltaCheckReturn();
+			Pop();
+			break;
 
-	case DELTA_CALL_FUNCTION:
-		translate->deltaCallFunction();
-		Pop();
-		break;
+		case DELTA_CALL_FUNCTION:
+			translate->deltaCallFunction();
+			Pop();
+			break;
 
-	case DELTA_SET_INT_CONST:
-		translate->deltaSetIntConst();
-		Pop();
-		break;
+		case DELTA_SET_INT_CONST:
+			translate->deltaSetIntConst();
+			Pop();
+			break;
 
-	case DELTA_SET_FLOAT_CONST:
-		translate->deltaSetFloatConst();
-		Pop();
-		break;
+		case DELTA_SET_FLOAT_CONST:
+			translate->deltaSetFloatConst();
+			Pop();
+			break;
 
-	case DELTA_EMPTY_STMT:
-		translate->deltaEmptyStmt();
-		Pop();
-		break;
+		case DELTA_EMPTY_STMT:
+			translate->deltaEmptyStmt();
+			Pop();
+			break;
 
-	case DELTA_ASSIGN_START:
-		translate->deltaAssignStart();
-		Pop();
-		break;
+		case DELTA_ASSIGN_START:
+			translate->deltaAssignStart();
+			Pop();
+			break;
 
-	case DELTA_ASSIGN_END:
-		translate->deltaAssignEnd();
-		Pop();
-		break;
-	case DELTA_WHILE_START:
-		translate->deltaWhileStart();
-		Pop();
-		break;
+		case DELTA_ASSIGN_END:
+			translate->deltaAssignEnd();
+			Pop();
+			break;
+		case DELTA_WHILE_START:
+			translate->deltaWhileStart();
+			Pop();
+			break;
 
-	case DELTA_WHILE_CONDITION:
-		translate->deltaWhileCondition();
-		Pop();
-		break;
+		case DELTA_WHILE_CONDITION:
+			translate->deltaWhileCondition();
+			Pop();
+			break;
 
-	case DELTA_WHILE_END:
-		translate->deltaWhileEnd();
-		Pop();
-		break;
+		case DELTA_WHILE_END:
+			translate->deltaWhileEnd();
+			Pop();
+			break;
 
-	case DELTA_PUSH_OPERAND:
-		translate->deltaPushOperand();
-		Pop();
-		break;
+		case DELTA_PUSH_OPERAND:
+			translate->deltaPushOperand();
+			Pop();
+			break;
 
-	case DELTA_PUSH_OPERATOR:
-		translate->deltaPushOperator();
-		Pop();
-		break;
+		case DELTA_PUSH_OPERATOR:
+			translate->deltaPushOperator();
+			Pop();
+			break;
 
-	case DELTA_PROCESS_OPERATOR:
-		translate->deltaProcessOperator();
-		Pop();
-		break;
+		case DELTA_PROCESS_OPERATOR:
+			translate->deltaProcessOperator();
+			Pop();
+			break;
 
-	case DELTA_CHECK_BINARY_OP:
-		translate->deltaCheckBinaryOp();
-		Pop();
-		break;
+		case DELTA_CHECK_BINARY_OP:
+			translate->deltaCheckBinaryOp();
+			Pop();
+			break;
 
-	default:
-		std::cerr << "Warning: unknown delta operation " << delta << std::endl;
-		break;
-	}
+		case TRIAD_PLUS:
+			Pop();
+			break;
+
+		case TRIAD_MINUS:
+			Pop();
+			break;
+
+		case TRIAD_MULT:
+			Pop();
+			break;
+
+		case TRIAD_DIV:
+			Pop();
+			break;
+
+		case TRIAD_MOD:
+			Pop();
+			break;
+
+		case TRIAD_COMPARE_LESS:
+			Pop();
+			break;
+
+		case TRIAD_COMPARE_LESS_OR_EQUAL:
+			Pop();
+			break;
+
+		case TRIAD_COMPARE_MORE:
+			Pop();
+			break;
+
+		case TRIAD_COMPARE_MORE_OR_EQUAL:
+			Pop();
+			break;
+
+		case TRIAD_SHIFT_LEFT:
+			Pop();
+			break;
+
+		case TRIAD_SHIFT_RIGHT:
+			Pop();
+			break;
+
+		case TRIAD_COMPARE_EQUAL:
+			Pop();
+			break;
+
+		case TRIAD_COMPARE_UNEQUAL:
+			Pop();
+			break;
+
+		case TRIAD_PUSH_SIMPLE:
+			Pop();
+			break;
+
+		case TRIAD_PUSH_CONST:
+			Pop();
+			break;
+
+		case TRIAD_GOTO:
+			Pop();
+			break;
+
+		case TRIAD_INIT:
+			Pop();
+			break;
+
+		case TRIAD_ASSIGN:
+			Pop();
+			break;
+
+		case TRIAD_INIT_FUN:
+			Pop();
+			break;
+
+		case TRIAD_CALL_FUN:
+			Pop();
+			break;
+
+		case TRIAD_FIND_FUN:
+			Pop();
+			break;
+
+		default:
+			std::cerr << "Warning: unknown delta operation " << delta << std::endl;
+			break;
+		}
 }
 
 void Diagram::PrintStack() {
