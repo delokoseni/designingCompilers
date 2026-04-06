@@ -15,6 +15,8 @@ struct GlobalData {
 
     // указатель на идентификатор
     SemanticTree* identPtr = nullptr;
+    //Указатель на функцию в дереве
+    SemanticTree* funPtr;
 
     // стек областей видимости
     std::stack<SemanticTree*> levels;

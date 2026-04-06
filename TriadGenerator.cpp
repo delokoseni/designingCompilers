@@ -134,3 +134,19 @@ void TriadGenerator::deltaPushOperand(bool isConst) {
     strncpy_s(newOperand.lex, maxLex, this->global->prevLex, maxLex - 1);
     this->global->operands.push(newOperand);
 }
+
+void TriadGenerator::deltaCallFunction() {
+    Triad callFuncTriad;
+    this->number++;
+    char* tmp = new char[strlen("call ") + strlen(this->global->prevLex) + 1];
+    strcpy_s(tmp, strlen("call ") + 1, "call ");
+    strcat_s(tmp, strlen("call ") + strlen(this->global->prevLex) + 1, this->global->prevLex);
+    strncpy_s(callFuncTriad.operation, maxLex, tmp, maxLex - 1);
+    callFuncTriad.firstOperand.isLink = true;
+    callFuncTriad.firstOperand.isConst = false;
+    callFuncTriad.firstOperand.number = this->tree->getFunStartNumber(this->global->funPtr);
+    callFuncTriad.secondOperand.isLink = true;
+    callFuncTriad.secondOperand.isConst = false;
+    callFuncTriad.secondOperand.number = -1000;
+    this->global->resultTriads.push_back(callFuncTriad);
+}

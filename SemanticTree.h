@@ -45,7 +45,7 @@ struct Node
     // Необязательные
     int flagInit;         // инициализировано ли?
     char* addr;           // адрес переменной (если нужен)
-    int numberStartFunctionAndClass; // номер начала функции/класса
+    int numberStartFunction; // номер начала функции
     int typeData;         // доп. тип для SU-перевода
     int typeObj;          // доп. тип объекта для SU-перевода
 
@@ -63,7 +63,7 @@ struct Node
         param = 0;
         flagInit = 0;
         addr = nullptr;
-        numberStartFunctionAndClass = 0;
+        numberStartFunction = 0;
         typeData = 0;
         typeObj = 0;
     }
@@ -114,4 +114,6 @@ public:
     bool nodeIsConst(type_lex lex);
     bool nodeIsInit(type_lex lex);
     SemanticTree* semGetVar(type_lex lex);
+    void setFunStartNumber(SemanticTree* tmp, int number);
+    int getFunStartNumber(SemanticTree* tmp);
 };

@@ -334,3 +334,10 @@ bool SemanticTree::nodeIsConst(type_lex lex) {
     }
     return false;
 }
+
+void SemanticTree::setFunStartNumber(SemanticTree* tmp, int number) {
+    tmp->node->numberStartFunction = number;
+}
+int SemanticTree::getFunStartNumber(SemanticTree* tmp) {
+    return tmp->node->numberStartFunction;
+}
