@@ -124,3 +124,13 @@ void TriadGenerator::deltaAssign() {
     this->deltaMatch();
     this->generateTriad("=");
 }
+
+void TriadGenerator::deltaPushOperand(bool isConst) {
+    DATA_TYPE type = this->global->dataType;
+    this->global->operandTypes.push(type);
+    Operand newOperand;
+    newOperand.isLink = false;
+    newOperand.isConst = isConst;
+    strncpy_s(newOperand.lex, maxLex, this->global->prevLex, maxLex - 1);
+    this->global->operands.push(newOperand);
+}
