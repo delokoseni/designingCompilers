@@ -13,6 +13,9 @@ Diagram::Diagram(Scaner* scaner, Translate* translate)
 
 	this->tree->setCurNode(this->tree);
 	this->translate->setTree(this->tree);
+	this->triadGenerator = new TriadGenerator();
+	this->triadGenerator->setGlobal(this->translate->getGlobal());
+	this->triadGenerator->setTree(this->tree);
 }
 
 void Diagram::Push(int symbol)
