@@ -110,4 +110,5 @@ public:
     Node* getNode() const { return node; }
     void setLeftChild(SemanticTree* child) { left = child; }
     void setRightChild(SemanticTree* child) { right = child; }
+    DATA_TYPE checkTypeExpression(DATA_TYPE type1, DATA_TYPE type2);
 };

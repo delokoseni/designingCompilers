@@ -12,32 +12,32 @@ private:
     int number = 0;
     std::stack<Triad*> triads;
 
-    void deltaMatch();
-    void generateTriad(const type_lex operation);
+    void deltaMatch(); // !
+    void generateTriad(const type_lex operation); // !
 
 public:
-    TriadGenerator();
-    void setTree(SemanticTree*);
-    void setGlobal(GlobalData*);
+    TriadGenerator(); // !
+    void setTree(SemanticTree*); // !
+    void setGlobal(GlobalData*); // !
 
     // Арифметические и сравнения
-    void deltaAdd();
-    void deltaMinus();
-    void deltaDiv();
-    void deltaMult();
-    void deltaMod();
-    void deltaLess();
-    void deltaLessEq();
-    void deltaMore();
-    void deltaMoreEq();
+    void deltaAdd(); // !
+    void deltaMinus(); // !
+    void deltaDiv(); // !
+    void deltaMult(); // !
+    void deltaMod(); // !
+    void deltaLess(); // !
+    void deltaLessEq(); // !
+    void deltaMore(); // !
+    void deltaMoreEq(); // !
     void deltaShiftLeft();
     void deltaShiftRight();
-    void deltaEval();
-    void deltaUnEval();
+    void deltaEval(); // !
+    void deltaUnEval(); // !
 
     // Присваивание и операнды
-    void deltaAssign();
-    void deltaPushOperand(bool);
+    void deltaAssign(); // !
+    void deltaPushOperand(bool); // !
     void deltaPushOperator(const type_lex op);
 
     // Управление while
@@ -46,8 +46,8 @@ public:
     void deltaWhileEnd();
 
     // Вызов функции без параметров
-    void deltaCallFunction();
+    void deltaCallFunction(); // !
 
     // Печать триад
-    void printTriad();
+    void printTriad(); // !
 };

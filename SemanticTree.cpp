@@ -297,3 +297,11 @@ DATA_TYPE SemanticTree::getDataType(SemanticTree* addr) {
 void SemanticTree::setNodeId(const char* lex) {
     strncpy_s(node->id, maxLex, lex, maxLex - 1);
 }
+
+DATA_TYPE SemanticTree::checkTypeExpression(DATA_TYPE type1, DATA_TYPE type2) {
+    if (type1 >= type2)
+        return type1;
+    else
+        return type2;
+    return TYPE_UNKNOWN;
+}
