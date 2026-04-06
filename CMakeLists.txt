@@ -12,4 +12,5 @@ add_executable(designingCompilers main.cpp
         Translate.h
         SemanticTree.cpp
         SemanticTree.h
-        GrammarSymbols.h)
+        GrammarSymbols.h
+        GlobalData.h)
