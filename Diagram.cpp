@@ -701,3 +701,7 @@ void Diagram::PrintStack() {
 	}
 	std::cout << std::endl;
 }
+
+void Diagram::printTriad() {
+
+}

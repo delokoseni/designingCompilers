@@ -15,8 +15,8 @@ int main()
 
     diagram->Run();
 
-    int type; type_lex lex;
-    type = scaner->UseScaner(lex);
+    type_lex lex;
+    int type = scaner->UseScaner(lex);
     if (type == typeEnd) {
         std::cout << "OK" << std::endl;
         translate->printTree();

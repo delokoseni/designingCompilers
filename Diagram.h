@@ -2,6 +2,7 @@
 #include "Scaner.h"
 #include "GrammarSymbols.h"
 #include "Translate.h"
+#include "TriadGenerator.h"
 #include <vector>
 
 class Diagram {
@@ -26,4 +27,5 @@ private:
 public:
     Diagram(Scaner* scaner, Translate *translate);
     int Run();
+    void printTriad();
 };
