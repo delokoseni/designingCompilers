@@ -19,7 +19,7 @@ enum TYPE_OBJECT {
 
 union DataValue {
     int dataInt;
-    double dataDouble;
+    float dataFloat;
 };
 
 struct Data {
