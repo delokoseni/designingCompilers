@@ -48,5 +48,5 @@ public:
     void deltaCallFunction();
 
     // Печать триад
-    void printTriad(); // !
+    void printTriad(); 
 };

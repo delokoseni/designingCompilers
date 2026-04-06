@@ -703,5 +703,5 @@ void Diagram::PrintStack() {
 }
 
 void Diagram::printTriad() {
-
+	this->triadGenerator->printTriad();
 }

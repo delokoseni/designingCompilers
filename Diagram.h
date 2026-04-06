@@ -11,6 +11,7 @@ private:
     Scaner* scaner;
     Translate* translate;
     SemanticTree* tree;
+    TriadGenerator* triadGenerator;
     std::vector<int> mag;   // Магазин
 
     void Push(int symbol);
