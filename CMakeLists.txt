@@ -13,4 +13,5 @@ add_executable(designingCompilers main.cpp
         SemanticTree.cpp
         SemanticTree.h
         GrammarSymbols.h
-        GlobalData.h)
+        GlobalData.h
+        TriadHelper.h)
