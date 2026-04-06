@@ -100,7 +100,7 @@ int Diagram::Run()
 
 void Diagram::ApplyRule(int nonterm, int lookahead)
 {
-	Pop(); // Снимаем текущий нетерминал
+	Pop();
 
 	switch (nonterm)
 	{
@@ -152,9 +152,9 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			Push(typeRightBracket);
 			Push(typeLeftBracket);
 		}
-		else if (lookahead == typeEval ||      // =
-			lookahead == typeComma ||     // ,
-			lookahead == typeSemicolon)   // ;
+		else if (lookahead == typeEval ||
+			lookahead == typeComma ||
+			lookahead == typeSemicolon)
 		{
 			Push(DELTA_END_DECLARE_DATA);
 			Push(typeSemicolon);
@@ -174,7 +174,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		type_lex lex; // для ошибок
 		if (lookahead == typeInt || lookahead == typeShort || lookahead == typeLong || lookahead == typeFloat)
 		{
-			Push(DELTA_START_DECLARE_DATA); //Отличается
+			Push(DELTA_START_DECLARE_DATA);
 			Push(lookahead); 
 		}
 		else
@@ -207,9 +207,9 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	case N_VARIABLE1: // <переменная1> → =<выражение> | ε
 		if (lookahead == typeEval) // =
 		{
-			Push(DELTA_ASSIGN_END); //Нет
+			Push(DELTA_ASSIGN_END);
 			Push(N_EXPRESSION);
-			Push(DELTA_ASSIGN_START); //Нет
+			Push(DELTA_ASSIGN_START);
 			Push(typeEval);
 		}
 		else if (lookahead == typeComma || lookahead == typeSemicolon)
@@ -228,7 +228,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		{
 			Push(N_LIST);
 			Push(N_VARIABLE);
-			Push(typeComma); //Есть дополнительная дельта
+			Push(typeComma);
 		}
 		else if (lookahead == typeSemicolon)
 		{
@@ -260,7 +260,6 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 
 	case N_EXPRESSION: // <выражение> → <сравнение> △pushOperand <выражение1>
 		Push(N_EXPRESSION1);
-		//Push(DELTA_PUSH_OPERAND); //Нет
 		Push(N_COMPARISON);
 		break;
 
@@ -269,14 +268,12 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    {
 	        Push(N_EXPRESSION1);
 	        Push(N_COMPARISON);
-	        //Push(DELTA_PUSH_OPERATOR); // Нет
 	        Push(typeEq);
 	    }
 	    else if (lookahead == typeUnEq) // !=
 	    {
 	        Push(N_EXPRESSION1);
 	        Push(N_COMPARISON);
-	        //Push(DELTA_PUSH_OPERATOR);   // Нет
 	        Push(typeUnEq);
 	    }
 	    else
@@ -285,10 +282,10 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    }
 	    break;
 	case N_COMPOSITE_OPERATOR: // <составной оператор> → { △enterBlock <операторы и описания> } △exitBlock
-		Push(DELTA_EXIT_BLOCK); //По другому
+		Push(DELTA_EXIT_BLOCK);
 		Push(typeRightBrace);
 		Push(N_OPERATORS_AND_DESCRIPTIONS);
-		Push(DELTA_ENTER_BLOCK); //По другому
+		Push(DELTA_ENTER_BLOCK);
 		Push(typeLeftBrace);
 		break;
 
@@ -437,7 +434,6 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		break;
 
 	case N_COMPARISON: // <сравнение> → <побитовый сдвиг> △pushOperand <сравнение1>
-	    //Push(DELTA_PUSH_OPERAND); // Нет
 	    Push(N_COMPARISON1);
 	    Push(N_BITWISE_SHIFT);
 	    break;
@@ -447,9 +443,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	        lookahead == typeLessOrEq || lookahead == typeMoreOrEq)
 	    {
 	        Push(N_COMPARISON1);
-	        //Push(DELTA_PROCESS_OPERATOR); // Нет
 	        Push(N_BITWISE_SHIFT);
-	        //Push(DELTA_PUSH_OPERATOR);  // Нет
 	        Push(lookahead);
 	    }
 	    else
@@ -459,7 +453,6 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    break;
 	case N_BITWISE_SHIFT: // <побитовый сдвиг> → <слагаемое> △pushOperand <побитовый сдвиг1>
 	    Push(N_BITWISE_SHIFT1);
-	    //Push(DELTA_PUSH_OPERAND);
 	    Push(N_SUMMAND);
 	    break;
 
@@ -467,10 +460,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    if (lookahead == typeBitwiseLeft || lookahead == typeBitwiseRight)
 	    {
 	        Push(N_BITWISE_SHIFT1);
-	        //Push(DELTA_PROCESS_OPERATOR);     // Не было бы
-	        //Push(DELTA_CHECK_BINARY_OP);    // Не знаю
 	        Push(N_SUMMAND);
-	        //Push(DELTA_PUSH_OPERATOR);        // Не было бы
 	        Push(lookahead);
 	    }
 	    else
@@ -481,7 +471,6 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 
 	case N_SUMMAND: // <слагаемое> → <множитель> △pushOperand <слагаемое1>
 		Push(N_SUMMAND1);
-		//Push(DELTA_PUSH_OPERAND); // Нет
 		Push(N_MULTIPLIER); 
 		break;
 
@@ -489,9 +478,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		if (lookahead == typePlus || lookahead == typeMinus)
 		{
 			Push(N_SUMMAND1);
-			//Push(DELTA_PROCESS_OPERATOR); // Нет
 			Push(N_MULTIPLIER);
-			//Push(DELTA_PUSH_OPERATOR); // Нет
 			Push(lookahead);   
 		}
 		else
@@ -502,7 +489,6 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 
 	case N_MULTIPLIER: // <множитель> → <унарная операция> △pushOperand <множитель1>
 		Push(N_MULTIPLIER1);
-		//Push(DELTA_PUSH_OPERAND); // Нет
 		Push(N_UNARY_OPERATION);  
 		break;
 
@@ -510,9 +496,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    if (lookahead == typeMul || lookahead == typeDiv || lookahead == typeMod)
 	    {
 	        Push(N_MULTIPLIER1);
-	        //Push(DELTA_PROCESS_OPERATOR); // Нет
 	        Push(N_UNARY_OPERATION);
-	        //Push(DELTA_PUSH_OPERATOR); // Нет
 	        Push(lookahead);
 	    }
 	    else

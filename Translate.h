@@ -26,39 +26,20 @@ private:
 
 public:
     Translate();
-
     void setTree(SemanticTree*);
-
-    // типы
     void deltaStartDeclareData();
     void deltaEndDeclareData();
-
-    // идентификаторы
     void deltaSetId();
     void deltaFindId();
-
-    // функции
     void deltaSetFunction();
     void deltaEndFunction();
-
-    // области видимости
     void deltaEnterBlock();
     void deltaExitBlock();
-
-    // проверка типов
     void deltaCheckType();
-
-    // return
     void deltaCheckReturn();
-
-    // вызов функции
     void deltaCallFunction();
-
-    // константы
     void deltaSetIntConst();
     void deltaSetFloatConst();
-
-    // прочее
     void deltaEmptyStmt();
     void printTree();
     void deltaAssignStart();

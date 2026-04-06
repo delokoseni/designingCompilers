@@ -22,7 +22,7 @@ void Translate::deltaSetId() {
     if (!this->tree->checkDuplicate(SemanticTree::curNode, this->global->prevLex)) {
 
         this->global->identPtr = this->tree->semInclude(this->global->prevLex, OBJ_VAR);
-        this->tree->semSetType(global->identPtr, this->global->dataType); // Не работает
+        this->tree->semSetType(global->identPtr, this->global->dataType);
     }
     else {
         this->tree->printError("detected duplicate of identifier", this->global->prevLex);
@@ -108,8 +108,6 @@ void Translate::printTree() {
 }
 
 void Translate::deltaAssignStart() {
-    // Начало операции присваивания
-    // Просто сохраняем идентификатор, с которым идёт присваивание
     if (global->identPtr == nullptr) {
         tree->printError("assign to undeclared identifier", global->prevLex);
         return;
@@ -122,10 +120,8 @@ void Translate::deltaAssignEnd() {
         return;
     }
 
-    // Тип переменной слева
     DATA_TYPE varType = tree->getDataType(global->identPtr);
 
-    // Тип выражения справа (упрощённо, по текущей лексеме)
     DATA_TYPE exprType = TYPE_UNKNOWN;
 
     switch (global->prevTerm) {
@@ -138,29 +134,28 @@ void Translate::deltaAssignEnd() {
     case typeFloat:
         exprType = TYPE_FLOAT; break;
     default:
-        exprType = varType; // если неизвестно, считаем совместимым
+        exprType = varType;
         break;
     }
 
-    // Проверка совместимости типов
     if (varType != exprType && exprType != TYPE_UNKNOWN) {
         tree->printError("type mismatch in assignment", global->prevLex);
     }
 }
 
 void Translate::deltaWhileStart() {
-    // начало while — можно запомнить точку входа, если понадобится
+
 }
 
 void Translate::deltaWhileCondition() {
-    // проверка условия while (в будущем можно проверить тип = логический)
+
     if (global->identPtr == nullptr) {
         tree->printError("while condition error", global->prevLex);
     }
 }
 
 void Translate::deltaWhileEnd() {
-    // конец while — завершение обработки цикла
+
 }
 
 void Translate::deltaPushOperand() {
@@ -175,46 +170,38 @@ void Translate::deltaPushOperand() {
 }
 
 void Translate::deltaPushOperator() {
-    // Проверяем, что текущая лексема задана
     if (global->prevLex[0] == '\0') {
         tree->printError("operator not found", global->prevLex);
         return;
     }
 
-    // Получаем текущий узел дерева
     SemanticTree* cur = SemanticTree::curNode;
     if (!cur) {
         tree->printError("current node is null", global->prevLex);
         return;
     }
 
-    // Создаём новый узел для оператора
     SemanticTree* operatorNode = cur->semAddNode();
 
-    // Задаём лексему оператора через публичный метод
     operatorNode->setNodeId(global->prevLex);
 
-    // Оператор — это не переменная/функция/константа, тип неизвестен
     operatorNode->semSetObj(operatorNode, OBJ_UNKNOWN);
     operatorNode->semSetType(operatorNode, TYPE_UNKNOWN);
 }
 
 void Translate::deltaProcessOperator() {
-    // Берём текущий оператор в дереве
     SemanticTree* cur = SemanticTree::curNode;
     if (!cur) {
         tree->printError("current operator node is null", global->prevLex);
         return;
     }
 
-    // Проверяем левый операнд через геттер
     SemanticTree* leftOperand = cur->getLeft();
     if (!leftOperand) {
         tree->printError("left operand missing for operator", global->prevLex);
         return;
     }
 
-    // Правый операнд (если он уже есть)
     SemanticTree* rightOperand = cur->getRight();
 
     DATA_TYPE leftType = tree->getDataType(leftOperand);
@@ -225,50 +212,41 @@ void Translate::deltaProcessOperator() {
         return;
     }
 
-    // Устанавливаем тип результата
     cur->getNode()->dataType = leftType;
     cur->getNode()->flagInit = 1;
 }
 
 void Translate::deltaCheckBinaryOp() {
-    // Берём текущий оператор
     SemanticTree* cur = tree->getCurNode();
     if (!cur) {
         tree->printError("current operator node is null", global->prevLex);
         return;
     }
 
-    // Левый и правый операнды должны быть правой и левой от текущего узла
-    SemanticTree* leftOperand = cur->getCurNode()->semGetType(global->prevLex); // можно заменить на текущий левый
+    SemanticTree* leftOperand = cur->getCurNode()->semGetType(global->prevLex);
     SemanticTree* rightOperand = nullptr;
 
-    // Проверяем, есть ли уже правый узел, если нет — создаём
     rightOperand = cur->semAddNode();
     if (!rightOperand) {
         tree->printError("right operand not found for operator", global->prevLex);
         return;
     }
 
-    // Получаем типы через публичный метод
     DATA_TYPE leftType = tree->getDataType(leftOperand);
     DATA_TYPE rightType = tree->getDataType(rightOperand);
 
-    // Проверка совместимости типов
     if (leftType != rightType) {
-        // Разрешаем только числовое приведение
         if ((leftType == TYPE_INTEGER || leftType == TYPE_SHORT || leftType == TYPE_LONG || leftType == TYPE_FLOAT) &&
             (rightType == TYPE_INTEGER || rightType == TYPE_SHORT || rightType == TYPE_LONG || rightType == TYPE_FLOAT)) {
             DATA_TYPE resultType = leftType > rightType ? leftType : rightType;
-            cur->setNodeId(""); // Можно использовать setNodeId для пометки или имени
+            cur->setNodeId("");
             } else {
                 tree->printError("type mismatch in binary operator", global->prevLex);
                 return;
             }
     }
 
-    // Пометка, что оператор обработан
-    // Для этого у нас пока есть setNodeId как единственный публичный метод к Node
-    cur->setNodeId(global->prevLex); // Можно сохранять лексему как "инициализированный" оператор
+    cur->setNodeId(global->prevLex);
 }
 
 GlobalData* Translate::getGlobal() {

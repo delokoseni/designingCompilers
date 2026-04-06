@@ -96,7 +96,6 @@ SemanticTree* SemanticTree::findUpOneLevel(SemanticTree* from, type_lex id)
     SemanticTree* parent = from->up;
     if (!parent) return nullptr;
 
-    // идём по всем детям текущего блока (через left/right)
     SemanticTree* cur = parent->left;
 
     while (cur)
@@ -132,7 +131,6 @@ SemanticTree* SemanticTree::semInclude(type_lex lex, TYPE_OBJECT t)
     curNode->setLeft(&tmp);
     curNode = curNode->left;
 
-    // если функция → создаём уровень
     if (t == OBJ_FUNC)
     {
         SemanticTree* funcNode = curNode;
