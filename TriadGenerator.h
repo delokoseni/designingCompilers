@@ -12,7 +12,7 @@ private:
     int number = 0;
     std::stack<Triad*> triads;
 
-    void deltaMatch(); // !
+    void deltaMatch();
     void generateTriad(const type_lex operation); // !
 
 public:

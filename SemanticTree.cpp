@@ -305,3 +305,32 @@ DATA_TYPE SemanticTree::checkTypeExpression(DATA_TYPE type1, DATA_TYPE type2) {
         return type2;
     return TYPE_UNKNOWN;
 }
+
+//провeряет существование переменной
+SemanticTree* SemanticTree::semGetVar(type_lex lex) {
+
+    SemanticTree* tmp = findUp(curNode, lex);
+    if (tmp == NULL)
+    {
+        printError("identifier does not exist", lex);
+        exit(0);
+    }
+
+    return tmp;
+}
+
+bool SemanticTree::nodeIsInit(type_lex lex) {
+    SemanticTree* tmp = curNode->semGetVar(lex);
+    if (tmp->node->flagInit == 1) {
+        return true;
+    }
+    return false;
+}
+
+bool SemanticTree::nodeIsConst(type_lex lex) {
+    SemanticTree* tmp = curNode->semGetVar(lex);
+    if (tmp->node->flagConst == 1) {
+        return true;
+    }
+    return false;
+}

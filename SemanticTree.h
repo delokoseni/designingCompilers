@@ -111,4 +111,7 @@ public:
     void setLeftChild(SemanticTree* child) { left = child; }
     void setRightChild(SemanticTree* child) { right = child; }
     DATA_TYPE checkTypeExpression(DATA_TYPE type1, DATA_TYPE type2);
+    bool nodeIsConst(type_lex lex);
+    bool nodeIsInit(type_lex lex);
+    SemanticTree* semGetVar(type_lex lex);
 };
