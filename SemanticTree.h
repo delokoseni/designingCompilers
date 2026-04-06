@@ -2,8 +2,6 @@
 #include "GrammarSymbols.h"
 #include <iostream>
 
-#define EMPTY -1
-
 enum DATA_TYPE {
     TYPE_UNKNOWN = 0,
     TYPE_INTEGER,
@@ -19,24 +17,56 @@ enum TYPE_OBJECT {
     OBJ_UNKNOWN
 };
 
+union DataValue {
+    int dataInt;
+    double dataDouble;
+};
+
+struct Data {
+    DataValue val;   // значение
+    DATA_TYPE type;  // тип данных
+};
+
 struct Node
 {
-    // общее
-    type_lex id;
-    DATA_TYPE dataType;
-    TYPE_OBJECT objType;
+    // Общее для всех объектов
+    type_lex id;          // идентификатор
+    DATA_TYPE dataType;   // тип данных переменной
+    TYPE_OBJECT objType;  // тип объекта
 
-    // обязательные
-    int flagConst;
-    char* data;
-    int n;
-    int hg; //?
-    int flagDef;
-    int param;
+    // Обязательные данные
+    int flagConst;        // константа?
+    Data data;            // значение переменной (int/double)
+    int n;                // номер или счетчик (если нужен)
+    int hg;               // размер массива / вспомогательное
+    int flagDef;          // определено ли?
+    int param;            // параметр функции?
 
-    // необязательные
-    int flagInit;
-    char* addr;
+    // Необязательные
+    int flagInit;         // инициализировано ли?
+    char* addr;           // адрес переменной (если нужен)
+    int numberStartFunctionAndClass; // номер начала функции/класса
+    int typeData;         // доп. тип для SU-перевода
+    int typeObj;          // доп. тип объекта для SU-перевода
+
+    // Конструктор по умолчанию для безопасной инициализации
+    Node() {
+        memset(id, 0, maxLex);
+        dataType = TYPE_UNKNOWN;
+        objType = OBJ_UNKNOWN;
+        flagConst = 0;
+        data.type = TYPE_UNKNOWN;
+        data.val.dataInt = 0;
+        n = 0;
+        hg = 0;
+        flagDef = 0;
+        param = 0;
+        flagInit = 0;
+        addr = nullptr;
+        numberStartFunctionAndClass = 0;
+        typeData = 0;
+        typeObj = 0;
+    }
 };
 
 class SemanticTree
