@@ -58,6 +58,69 @@ void TriadGenerator::generateTriad(const type_lex operation) {
 void TriadGenerator::setTree(SemanticTree* tree) {
     this->tree = tree;
 }
+
 void TriadGenerator::setGlobal(GlobalData* global) {
     this->global = global;
+}
+
+void TriadGenerator::deltaAdd() {
+    this->deltaMatch();
+    this->generateTriad("+");
+}
+void TriadGenerator::deltaMinus() {
+    this->deltaMatch();
+    this->generateTriad("-");
+}
+void TriadGenerator::deltaDiv() {
+    this->deltaMatch();
+    this->generateTriad("/");
+}
+void TriadGenerator::deltaMult() {
+    this->deltaMatch();
+    this->generateTriad("*");
+}
+void TriadGenerator::deltaMod() {
+    this->deltaMatch();
+    this->generateTriad("%");
+}
+void TriadGenerator::deltaLess() {
+    this->deltaMatch();
+    this->generateTriad("<");
+}
+void TriadGenerator::deltaLessEq() {
+    this->deltaMatch();
+    this->generateTriad("<=");
+}
+void TriadGenerator::deltaMoreEq() {
+    this->deltaMatch();
+    this->generateTriad(">=");
+}
+void TriadGenerator::deltaMore() {
+    this->deltaMatch();
+    this->generateTriad(">");
+}
+
+void TriadGenerator::deltaShiftLeft() {
+    this->deltaMatch();
+    this->generateTriad("<<");
+}
+
+void TriadGenerator::deltaShiftRight() {
+    this->deltaMatch();
+    this->generateTriad(">>");
+}
+
+void TriadGenerator::deltaEval() {
+    this->deltaMatch();
+    this->generateTriad("==");
+}
+
+void TriadGenerator::deltaUnEval() {
+    this->deltaMatch();
+    this->generateTriad("!=");
+}
+
+void TriadGenerator::deltaAssign() {
+    this->deltaMatch();
+    this->generateTriad("=");
 }

@@ -20,22 +20,22 @@ public:
     void setGlobal(GlobalData*);
 
     // Арифметические и сравнения
-    void deltaAdd(); // !
-    void deltaMinus(); // !
-    void deltaDiv(); // !
-    void deltaMult(); // !
-    void deltaMod(); // !
-    void deltaLess(); // !
-    void deltaLessEq(); // !
-    void deltaMore(); // !
-    void deltaMoreEq(); // !
+    void deltaAdd();
+    void deltaMinus();
+    void deltaDiv();
+    void deltaMult();
+    void deltaMod();
+    void deltaLess();
+    void deltaLessEq();
+    void deltaMore();
+    void deltaMoreEq();
     void deltaShiftLeft();
     void deltaShiftRight();
-    void deltaEval(); // !
-    void deltaUnEval(); // !
+    void deltaEval();
+    void deltaUnEval();
 
     // Присваивание и операнды
-    void deltaAssign(); // !
+    void deltaAssign();
     void deltaPushOperand(bool); // !
     void deltaPushOperator(const type_lex op);
 
