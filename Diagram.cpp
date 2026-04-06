@@ -207,13 +207,17 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		Push(N_IDENTIFIER);
 		break;
 
+	//TODO Разобраться с порядком
 	case N_VARIABLE1: // <переменная1> → =<выражение> | ε
 		if (lookahead == typeEval) // =
 		{
-			Push(DELTA_ASSIGN_END);
+			Push(TRIAD_ASSIGN);
+			Push(DELTA_ASSIGN_END); // Нет
 			Push(N_EXPRESSION);
-			Push(DELTA_ASSIGN_START);
+			Push(DELTA_ASSIGN_START); // Нет
 			Push(typeEval);
+			Push(TRIAD_PUSH_SIMPLE);
+			Push(TRIAD_INIT);
 		}
 		else if (lookahead == typeComma || lookahead == typeSemicolon)
 		{
@@ -243,13 +247,16 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			scaner->PrintError("Ошибка в <список переменных>", scaner->GetCurrentLex()); 
 		}
 		break;
-
+	//TODO Разобраться с порядком
 	case N_ASSIGNMENT: // <присваивание> → <идентификатор> △findId △assignStart = <выражение> △assignEnd
 		if (lookahead == typeId)
 		{
+			Push(TRIAD_ASSIGN);
 			Push(DELTA_ASSIGN_END); //Нет
 			Push(N_EXPRESSION);
 			Push(typeEval);
+			Push(TRIAD_PUSH_CONST);
+			Push(TRIAD_INIT);
 			Push(DELTA_ASSIGN_START); //Нет
 			Push(DELTA_FIND_ID);
 			Push(N_IDENTIFIER);
@@ -270,18 +277,20 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    if (lookahead == typeEq)   // ==
 	    {
 	        Push(N_EXPRESSION1);
+	    	Push(TRIAD_EVAL);
 	        Push(N_COMPARISON);
 	        Push(typeEq);
 	    }
 	    else if (lookahead == typeUnEq) // !=
 	    {
 	        Push(N_EXPRESSION1);
+	    	Push(TRIAD_UNEVAL);
 	        Push(N_COMPARISON);
 	        Push(typeUnEq);
 	    }
 	    else
 	    {
-	        eps(); // пустая альтернатива
+	        eps();
 	    }
 	    break;
 	case N_COMPOSITE_OPERATOR: // <составной оператор> → { △enterBlock <операторы и описания> } △exitBlock
@@ -430,7 +439,9 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		{
 			Push(typeRightBracket);
 			Push(typeLeftBracket);
-			Push(DELTA_CALL_FUNCTION); //Другая дельта
+			Push(TRIAD_CALL_FUN);
+			Push(TRIAD_FIND_FUN);
+			Push(DELTA_CALL_FUNCTION); //Нет
 			Push(DELTA_FIND_ID);
 			Push(N_IDENTIFIER);
 		}
@@ -446,6 +457,18 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	        lookahead == typeLessOrEq || lookahead == typeMoreOrEq)
 	    {
 	        Push(N_COMPARISON1);
+	    	if (lookahead == typeLess) {
+	    		Push(TRIAD_LESS);
+	    	}
+	    	else if (lookahead == typeLessOrEq) {
+	    		Push(TRIAD_LESS_OR_EQUAL);
+	    	}
+	    	else if (lookahead == typeMore) {
+	    		Push(TRIAD_MORE);
+	    	}
+	    	else {
+	    		Push(TRIAD_MORE_OR_EQUAL);
+	    	}
 	        Push(N_BITWISE_SHIFT);
 	        Push(lookahead);
 	    }
@@ -463,6 +486,12 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    if (lookahead == typeBitwiseLeft || lookahead == typeBitwiseRight)
 	    {
 	        Push(N_BITWISE_SHIFT1);
+	    	if (lookahead == typeBitwiseLeft) {
+	    		Push(TRIAD_SHIFT_LEFT);
+	    	}
+	    	else {
+	    		Push(TRIAD_SHIFT_RIGHT);
+	    	}
 	        Push(N_SUMMAND);
 	        Push(lookahead);
 	    }
@@ -481,6 +510,12 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		if (lookahead == typePlus || lookahead == typeMinus)
 		{
 			Push(N_SUMMAND1);
+			if (lookahead == typePlus) {
+				Push(TRIAD_ADD);
+			}
+			else {
+				Push(TRIAD_MINUS);
+			}
 			Push(N_MULTIPLIER);
 			Push(lookahead);   
 		}
@@ -499,6 +534,15 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    if (lookahead == typeMul || lookahead == typeDiv || lookahead == typeMod)
 	    {
 	        Push(N_MULTIPLIER1);
+	    	if (lookahead == typeMul) {
+	    		Push(TRIAD_MULT);
+	    	}
+	    	else if (lookahead == typeDiv) {
+	    		Push(TRIAD_DIV);
+	    	}
+	    	else {
+	    		Push(TRIAD_MOD);
+	    	}
 	        Push(N_UNARY_OPERATION);
 	        Push(lookahead);
 	    }
@@ -508,11 +552,13 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    }
 	    break;
 
+	//TODO Разобраться с Push TRIAD_***
 	case N_UNARY_OPERATION: // <унарная операция> → <знак> <элементарное выражение>
 		Push(N_ELEMENTARY_EXPRESSION); 
 		Push(N_SIGN);       
 		break;
 
+	//TODO Разобраться с Push TRIAD_***
 	case N_SIGN: // <знак> → + | - | ε
 		if (lookahead == typePlus || lookahead == typeMinus)
 		{
@@ -528,6 +574,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    if (lookahead == typeId)
 	    {
 	        Push(N_ELEM1);
+	    	Push(TRIAD_PUSH_SIMPLE);
 	        Push(DELTA_FIND_ID);
 	        Push(N_IDENTIFIER);
 	    }
@@ -538,6 +585,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	    }
 	    else if (lookahead == typeLeftBracket)
 	    {
+	    	Push(TRIAD_PUSH_CONST);
 	        Push(typeRightBracket);
 	        Push(N_EXPRESSION);
 	        Push(typeLeftBracket);
@@ -547,7 +595,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 	        scaner->PrintError("Ошибка в <элементарное выражение>", scaner->GetCurrentLex());
 	    }
 	    break;
-
+	//TODO Разобраться с Push TRIAD_***
 	case N_ELEM1: // <элем1> → () | ε
 		if (lookahead == typeLeftBracket)
 		{
@@ -756,19 +804,22 @@ void Diagram::DeltaOperation(int delta)
 			Pop();
 			break;
 
-		case TRIAD_PUSH_SIMPLE: //TODO
+		case TRIAD_PUSH_SIMPLE:
+			triadGenerator->deltaPushOperand(false);
 			Pop();
 			break;
 
-		case TRIAD_PUSH_CONST: //TODO
+		case TRIAD_PUSH_CONST:
+			triadGenerator->deltaPushOperand(true);
 			Pop();
 			break;
 
-		case TRIAD_GOTO: //TODO
+		case TRIAD_GOTO: //TODO Под вопросом его необходимость
 			Pop();
 			break;
 
-		case TRIAD_INIT: //TODO
+		case TRIAD_INIT:
+			translate->deltaSetInitValue();
 			Pop();
 			break;
 

@@ -37,4 +37,5 @@ public:
     void deltaCheckBinaryOp();
     GlobalData* getGlobal();
     void setLex(int term, type_lex lex);
+    void deltaSetInitValue();
 };

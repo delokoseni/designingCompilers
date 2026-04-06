@@ -158,7 +158,7 @@ void Translate::deltaWhileEnd() {
 
 }
 
-void Translate::deltaPushOperand() {
+void Translate::deltaPushOperand() { // TODO Разобраться нужен ли этот метод
     if (!global->identPtr) {
         tree->printError("operand not found", global->prevLex);
         return;
@@ -259,4 +259,8 @@ void Translate::setLex(int term, type_lex lex) {
     if (term == typeId || term == typeMain) {
         strcpy_s(global->prevLex, maxLex, lex);
     }
+}
+
+void Translate::deltaSetInitValue() {
+    this->global->isInit = true;
 }
