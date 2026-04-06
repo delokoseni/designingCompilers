@@ -150,3 +150,28 @@ void TriadGenerator::deltaCallFunction() {
     callFuncTriad.secondOperand.number = -1000;
     this->global->resultTriads.push_back(callFuncTriad);
 }
+
+void TriadGenerator::printTriad() {
+    printf("Triads:\n");
+    for (int i = 0; i < this->global->resultTriads.size(); i++) {
+        Triad triad = this->global->resultTriads[i];
+        std::cout << "(" << i << ")" << triad.operation;
+        if (triad.firstOperand.number != -1000) {
+            if (triad.firstOperand.isLink)
+                std::cout << "(" << triad.firstOperand.number << ")";
+            else {
+                std::cout << triad.firstOperand.lex;
+            }
+        }
+
+        if (triad.secondOperand.number != -1000) {
+            if (triad.secondOperand.isLink)
+                std::cout << "(" << triad.secondOperand.number << ")";
+            else {
+                std::cout << triad.secondOperand.lex;
+            }
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+}
