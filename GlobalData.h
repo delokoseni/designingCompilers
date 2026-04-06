@@ -1,4 +1,5 @@
 #pragma once
+#include "TriadHelper.h"
 #include <stack>
 
 struct GlobalData {
@@ -8,6 +9,8 @@ struct GlobalData {
 
     // объявление
     bool flagDeclaration = false;
+    bool isConstDeclaration = false; // если константа
+    bool isInit = false;             // инициализация при объявлении
     DATA_TYPE dataType = TYPE_UNKNOWN;
 
     // указатель на идентификатор
@@ -15,4 +18,8 @@ struct GlobalData {
 
     // стек областей видимости
     std::stack<SemanticTree*> levels;
+
+    // Стек операндов для генерации триад
+    std::stack<Operand> operands;
+    std::stack<DATA_TYPE> operandTypes;
 };
