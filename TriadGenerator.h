@@ -13,12 +13,11 @@ private:
     std::stack<Triad*> triads;
 
     void deltaMatch();
-    void generateTriad(const type_lex operation); // !
+    void generateTriad(const type_lex operation);
 
 public:
-    TriadGenerator(); // !
-    void setTree(SemanticTree*); // !
-    void setGlobal(GlobalData*); // !
+    void setTree(SemanticTree*);
+    void setGlobal(GlobalData*);
 
     // Арифметические и сравнения
     void deltaAdd(); // !

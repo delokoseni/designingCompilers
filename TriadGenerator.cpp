@@ -54,3 +54,10 @@ void TriadGenerator::generateTriad(const type_lex operation) {
     triadOperand.number = this->number++;
     this->global->operands.push(triadOperand);
 }
+
+void TriadGenerator::setTree(SemanticTree* tree) {
+    this->tree = tree;
+}
+void TriadGenerator::setGlobal(GlobalData* global) {
+    this->global = global;
+}
