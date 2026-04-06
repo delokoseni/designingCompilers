@@ -691,87 +691,102 @@ void Diagram::DeltaOperation(int delta)
 			Pop();
 			break;
 
-		case TRIAD_PLUS:
+		case TRIAD_ADD:
+			triadGenerator->deltaAdd();
 			Pop();
 			break;
 
 		case TRIAD_MINUS:
+			triadGenerator->deltaMinus();
 			Pop();
 			break;
 
 		case TRIAD_MULT:
+			triadGenerator->deltaMult();
 			Pop();
 			break;
 
 		case TRIAD_DIV:
+			triadGenerator->deltaDiv();
 			Pop();
 			break;
 
 		case TRIAD_MOD:
+			triadGenerator->deltaMod();
 			Pop();
 			break;
 
-		case TRIAD_COMPARE_LESS:
+		case TRIAD_LESS:
+			triadGenerator->deltaLess();
 			Pop();
 			break;
 
-		case TRIAD_COMPARE_LESS_OR_EQUAL:
+		case TRIAD_LESS_OR_EQUAL:
+			triadGenerator->deltaLessEq();
 			Pop();
 			break;
 
-		case TRIAD_COMPARE_MORE:
+		case TRIAD_MORE:
+			triadGenerator->deltaMore();
 			Pop();
 			break;
 
-		case TRIAD_COMPARE_MORE_OR_EQUAL:
+		case TRIAD_MORE_OR_EQUAL:
+			triadGenerator->deltaMoreEq();
 			Pop();
 			break;
 
 		case TRIAD_SHIFT_LEFT:
+			triadGenerator->deltaShiftLeft();
 			Pop();
 			break;
 
 		case TRIAD_SHIFT_RIGHT:
+			triadGenerator->deltaShiftRight();
 			Pop();
 			break;
 
-		case TRIAD_COMPARE_EQUAL:
+		case TRIAD_EVAL:
+			triadGenerator->deltaEval();
 			Pop();
 			break;
 
-		case TRIAD_COMPARE_UNEQUAL:
+		case TRIAD_UNEVAL:
+			triadGenerator->deltaUnEval();
 			Pop();
 			break;
 
-		case TRIAD_PUSH_SIMPLE:
+		case TRIAD_PUSH_SIMPLE: //TODO
 			Pop();
 			break;
 
-		case TRIAD_PUSH_CONST:
+		case TRIAD_PUSH_CONST: //TODO
 			Pop();
 			break;
 
-		case TRIAD_GOTO:
+		case TRIAD_GOTO: //TODO
 			Pop();
 			break;
 
-		case TRIAD_INIT:
+		case TRIAD_INIT: //TODO
 			Pop();
 			break;
 
 		case TRIAD_ASSIGN:
+			triadGenerator->deltaAssign();
 			Pop();
 			break;
 
-		case TRIAD_INIT_FUN:
+		case TRIAD_INIT_FUN: //TODO
 			Pop();
 			break;
 
 		case TRIAD_CALL_FUN:
+			translate->deltaCallFunction();
 			Pop();
 			break;
 
-		case TRIAD_FIND_FUN:
+		case TRIAD_FIND_FUN: //TODO
 			Pop();
 			break;
 

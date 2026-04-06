@@ -37,16 +37,16 @@ public:
     // Присваивание и операнды
     void deltaAssign();
     void deltaPushOperand(bool);
-    void deltaPushOperator(const type_lex op);
+    void deltaPushOperator(const type_lex op); //TODO
 
     // Управление while
-    void deltaWhileStart();
-    void deltaWhileCondition();
-    void deltaWhileEnd();
+    void deltaWhileStart(); //TODO
+    void deltaWhileCondition(); //TODO
+    void deltaWhileEnd(); //TODO
 
     // Вызов функции без параметров
     void deltaCallFunction();
 
     // Печать триад
-    void printTriad(); 
+    void printTriad();
 };
