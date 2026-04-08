@@ -256,7 +256,8 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 				Push(DELTA_ASSIGN_END); //Нет
 				Push(N_EXPRESSION);
 				Push(typeEval);
-				Push(TRIAD_PUSH_CONST);
+				//Push(TRIAD_PUSH_CONST);
+				Push(TRIAD_PUSH_SIMPLE);
 				Push(TRIAD_INIT);
 				Push(DELTA_ASSIGN_START); //Нет
 				Push(DELTA_FIND_ID);
@@ -570,19 +571,21 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 				eps();
 			}
 			break;
-
+		//TODO Потенциально содержит ошибку
 		case N_ELEMENTARY_EXPRESSION: // <элементарное выражение> → <идентификатор> △findId <элем1> | <константа> | ( <выражение> )
 		    if (lookahead == typeId)
 		    {
 		        Push(N_ELEM1);
 	    		Push(TRIAD_PUSH_SIMPLE);
+		    	std::cout << "Идентификатор LOOKAHEAD " << lookahead << std::endl;
 		        Push(DELTA_FIND_ID);
 		        Push(N_IDENTIFIER);
 		    }
 		    else if (lookahead == typeInt || lookahead == typeShort ||
 		             lookahead == typeLong || lookahead == typeFloat)
-		    {
+		    { // Константа
 	    		Push(TRIAD_PUSH_CONST); // Добавил
+		    	std::cout << "CONST LOOKAHEAD " << lookahead << std::endl;
 		        Push(lookahead);
 		    }
 		    else if (lookahead == typeLeftBracket)

@@ -1,4 +1,7 @@
 #include "Scaner.h"
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 /**
 * Список допустимых ключевых слов в программе
