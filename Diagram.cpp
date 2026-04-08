@@ -343,11 +343,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			// while (expr) {...}
 			else if (lookahead == typeWhile) //Потенциально нужно заменить на N_CYCLE
 			{
-				Push(N_COMPOSITE_OPERATOR);
-				Push(typeRightBracket);
-				Push(N_EXPRESSION);
-				Push(typeLeftBracket);
-				Push(typeWhile);
+				Push(N_CYCLE);
 			}
 
 			// return expr ;
@@ -718,17 +714,17 @@ void Diagram::DeltaOperation(int delta)
 			Pop();
 			break;
 		case DELTA_WHILE_START:
-			translate->deltaWhileStart();
+			triadGenerator->deltaWhileStart();
 			Pop();
 			break;
 
 		case DELTA_WHILE_CONDITION:
-			translate->deltaWhileCondition();
+			triadGenerator->deltaWhileCondition();
 			Pop();
 			break;
 
 		case DELTA_WHILE_END:
-			translate->deltaWhileEnd();
+			triadGenerator->deltaWhileEnd();
 			Pop();
 			break;
 

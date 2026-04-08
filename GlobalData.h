@@ -24,5 +24,7 @@ struct GlobalData {
     // Стек операндов для генерации триад
     std::stack<Operand> operands;
     std::stack<DATA_TYPE> operandTypes;
+    std::stack<int> whileStartIndices;
+    std::stack<int> whileFalseJumpIndices;
     std::deque<Triad> resultTriads;
 };

@@ -42,11 +42,15 @@ void TriadGenerator::generateTriad(const type_lex operation) {
     newTriad.secondOperand = secondOperand;
     this->global->resultTriads.push_back(newTriad);
 
+    const int triadIndex = static_cast<int>(this->global->resultTriads.size()) - 1;
+
     // Генерация операнда в виде триады
     Operand triadOperand;
     triadOperand.isConst = false;
     triadOperand.isLink = true;
-    triadOperand.number = this->number++;
+    triadOperand.isFunc = false;
+    triadOperand.number = triadIndex;
+    triadOperand.lex[0] = '\0';
     this->global->operands.push(triadOperand);
 }
 
@@ -149,11 +153,13 @@ void TriadGenerator::deltaCallFunction() {
     callFuncTriad.secondOperand.number = -1000;
     this->global->resultTriads.push_back(callFuncTriad);
 
+    const int triadIndex = static_cast<int>(this->global->resultTriads.size()) - 1;
+
     Operand triadOperand;
     triadOperand.isConst = false;
     triadOperand.isLink = true;
     triadOperand.isFunc = false;
-    triadOperand.number = this->number++;
+    triadOperand.number = triadIndex;
     triadOperand.lex[0] = '\0';
     this->global->operands.push(triadOperand);
 
@@ -168,6 +174,63 @@ void TriadGenerator::deltaInitFunction() {
     }
 
     this->tree->setFunStartNumber(this->global->funPtr, static_cast<int>(this->global->resultTriads.size()));
+}
+
+void TriadGenerator::deltaWhileStart() {
+    this->global->whileStartIndices.push(static_cast<int>(this->global->resultTriads.size()));
+}
+
+void TriadGenerator::deltaWhileCondition() {
+    if (this->global->operands.empty()) {
+        this->tree->printError("while condition operand missing", this->global->prevLex);
+        return;
+    }
+
+    Operand conditionOperand = this->global->operands.top();
+    this->global->operands.pop();
+
+    if (!this->global->operandTypes.empty()) {
+        this->global->operandTypes.pop();
+    }
+
+    Triad ifFalseTriad{};
+    strcpy_s(ifFalseTriad.operation, maxLex, "ifFalse");
+    ifFalseTriad.firstOperand = conditionOperand;
+    ifFalseTriad.secondOperand.isLink = true;
+    ifFalseTriad.secondOperand.isConst = false;
+    ifFalseTriad.secondOperand.isFunc = false;
+    ifFalseTriad.secondOperand.number = -1;
+
+    this->global->whileFalseJumpIndices.push(static_cast<int>(this->global->resultTriads.size()));
+    this->global->resultTriads.push_back(ifFalseTriad);
+}
+
+void TriadGenerator::deltaWhileEnd() {
+    if (this->global->whileStartIndices.empty() || this->global->whileFalseJumpIndices.empty()) {
+        this->tree->printError("while stack is inconsistent", this->global->prevLex);
+        return;
+    }
+
+    const int loopStartIndex = this->global->whileStartIndices.top();
+    this->global->whileStartIndices.pop();
+
+    const int falseJumpIndex = this->global->whileFalseJumpIndices.top();
+    this->global->whileFalseJumpIndices.pop();
+
+    Triad gotoTriad{};
+    strcpy_s(gotoTriad.operation, maxLex, "goto");
+    gotoTriad.firstOperand.isLink = true;
+    gotoTriad.firstOperand.isConst = false;
+    gotoTriad.firstOperand.isFunc = false;
+    gotoTriad.firstOperand.number = loopStartIndex;
+    gotoTriad.secondOperand.isLink = true;
+    gotoTriad.secondOperand.isConst = false;
+    gotoTriad.secondOperand.isFunc = false;
+    gotoTriad.secondOperand.number = -1000;
+    this->global->resultTriads.push_back(gotoTriad);
+
+    this->global->resultTriads[falseJumpIndex].secondOperand.number =
+        static_cast<int>(this->global->resultTriads.size());
 }
 
 void TriadGenerator::printTriad() {
