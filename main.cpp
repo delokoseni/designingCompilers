@@ -20,6 +20,7 @@ int main()
     if (type == typeEnd) {
         std::cout << "OK" << std::endl;
         translate->printTree();
+        diagram->printTriad();
     }
     else
         std::cout << "ERROR" << std::endl;

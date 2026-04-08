@@ -1,6 +1,5 @@
 #include "TriadGenerator.h"
 #include "Translate.h"
-#include <vector>
 #include <iostream>
 
 void TriadGenerator::deltaMatch() {
@@ -125,13 +124,32 @@ void TriadGenerator::deltaAssign() {
     this->generateTriad("=");
 }
 
-void TriadGenerator::deltaPushOperand(bool isConst) {
+/*void TriadGenerator::deltaPushOperand(bool isConst) {
     DATA_TYPE type = this->global->dataType;
     this->global->operandTypes.push(type);
     Operand newOperand;
     newOperand.isLink = false;
     newOperand.isConst = isConst;
     strncpy_s(newOperand.lex, maxLex, this->global->prevLex, maxLex - 1);
+    this->global->operands.push(newOperand);
+}*/
+
+void TriadGenerator::deltaPushOperand(bool isConst) {
+    DATA_TYPE type = this->global->dataType;
+
+    std::cout << "PUSH OPERAND: "
+              << this->global->prevLex
+              << " (type=" << type
+              << ", const=" << (isConst ? "true" : "false") << ")"
+              << std::endl;
+
+    this->global->operandTypes.push(type);
+
+    Operand newOperand;
+    newOperand.isLink = false;
+    newOperand.isConst = isConst;
+    strncpy_s(newOperand.lex, maxLex, this->global->prevLex, maxLex - 1);
+
     this->global->operands.push(newOperand);
 }
 
@@ -152,7 +170,7 @@ void TriadGenerator::deltaCallFunction() {
 }
 
 void TriadGenerator::printTriad() {
-    printf("Triads:\n");
+    std::cout << "Triads:" << std::endl;
     for (int i = 0; i < this->global->resultTriads.size(); i++) {
         Triad triad = this->global->resultTriads[i];
         std::cout << "(" << i << ")" << triad.operation;
