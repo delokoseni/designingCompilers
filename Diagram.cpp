@@ -585,7 +585,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		             lookahead == typeLong || lookahead == typeFloat)
 		    { // Константа
 	    		Push(TRIAD_PUSH_CONST); // Добавил
-		    	std::cout << "CONST LOOKAHEAD " << lookahead << std::endl;
+		    	std::cout << "CONST LOOKAHEAD " << lookahead << "CURRENT LEX " << scaner->GetCurrentLex() << std::endl;
 		        Push(lookahead);
 		    }
 		    else if (lookahead == typeLeftBracket)
