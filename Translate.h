@@ -22,6 +22,7 @@ public:
     void deltaCheckType();
     void deltaCheckReturn();
     void deltaCallFunction();
+    void deltaFindFunc();
     void deltaSetIntConst();
     void deltaSetFloatConst();
     void deltaEmptyStmt();

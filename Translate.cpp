@@ -40,6 +40,7 @@ void Translate::deltaFindId() {
 
 void Translate::deltaSetFunction() {
     SemanticTree* func = tree->semInclude(global->prevLex, OBJ_FUNC);
+    global->funPtr = func;
 
     global->levels.push(func);
     tree->setCurNode(func);
@@ -88,6 +89,10 @@ void Translate::deltaCallFunction() {
     if (func == nullptr) {
         tree->printError("function not found", global->prevLex);
     }
+}
+
+void Translate::deltaFindFunc() {
+    global->funPtr = tree->semGetFunc(global->prevLex);
 }
 
 void Translate::deltaSetIntConst() {

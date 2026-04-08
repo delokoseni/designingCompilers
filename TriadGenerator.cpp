@@ -1,6 +1,7 @@
 #include "TriadGenerator.h"
 #include "Translate.h"
 #include <iostream>
+#include <cstring>
 
 void TriadGenerator::deltaMatch() {
     DATA_TYPE second = this->global->operandTypes.top();
@@ -130,19 +131,43 @@ void TriadGenerator::deltaPushOperand(bool isConst) {
 }
 
 void TriadGenerator::deltaCallFunction() {
+    if (this->global->funPtr == nullptr) {
+        this->tree->printError("function not selected for call generation", this->global->prevLex);
+        return;
+    }
+
     Triad callFuncTriad;
-    this->number++;
-    char* tmp = new char[strlen("call ") + strlen(this->global->prevLex) + 1];
-    strcpy_s(tmp, strlen("call ") + 1, "call ");
-    strcat_s(tmp, strlen("call ") + strlen(this->global->prevLex) + 1, this->global->prevLex);
-    strncpy_s(callFuncTriad.operation, maxLex, tmp, maxLex - 1);
+    strcpy_s(callFuncTriad.operation, maxLex, "call ");
+    strcat_s(callFuncTriad.operation, maxLex, this->global->prevLex);
     callFuncTriad.firstOperand.isLink = true;
     callFuncTriad.firstOperand.isConst = false;
+    callFuncTriad.firstOperand.isFunc = true;
     callFuncTriad.firstOperand.number = this->tree->getFunStartNumber(this->global->funPtr);
     callFuncTriad.secondOperand.isLink = true;
     callFuncTriad.secondOperand.isConst = false;
+    callFuncTriad.secondOperand.isFunc = false;
     callFuncTriad.secondOperand.number = -1000;
     this->global->resultTriads.push_back(callFuncTriad);
+
+    Operand triadOperand;
+    triadOperand.isConst = false;
+    triadOperand.isLink = true;
+    triadOperand.isFunc = false;
+    triadOperand.number = this->number++;
+    triadOperand.lex[0] = '\0';
+    this->global->operands.push(triadOperand);
+
+    DATA_TYPE returnType = this->tree->getDataType(this->global->funPtr);
+    this->global->operandTypes.push(returnType);
+}
+
+void TriadGenerator::deltaInitFunction() {
+    if (this->global->funPtr == nullptr) {
+        this->tree->printError("function not selected for entry generation", this->global->prevLex);
+        return;
+    }
+
+    this->tree->setFunStartNumber(this->global->funPtr, static_cast<int>(this->global->resultTriads.size()));
 }
 
 void TriadGenerator::printTriad() {
@@ -150,6 +175,12 @@ void TriadGenerator::printTriad() {
     for (int i = 0; i < this->global->resultTriads.size(); i++) {
         Triad triad = this->global->resultTriads[i];
         std::cout << "(" << i << ") " << triad.operation;
+
+        if (std::strncmp(triad.operation, "call ", 5) == 0) {
+            std::cout << "\n";
+            continue;
+        }
+
         if (triad.firstOperand.number != -1000) {
             if (triad.firstOperand.isLink)
                 std::cout << " (" << triad.firstOperand.number << ") ";

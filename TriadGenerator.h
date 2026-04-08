@@ -46,6 +46,7 @@ public:
 
     // Вызов функции без параметров
     void deltaCallFunction();
+    void deltaInitFunction();
 
     // Печать триад
     void printTriad();

@@ -152,6 +152,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 				Push(DELTA_EXIT_BLOCK);
 				Push(N_COMPOSITE_OPERATOR);
 				Push(DELTA_ENTER_BLOCK);
+				Push(TRIAD_INIT_FUN);
 				Push(DELTA_SET_FUNC);
 				Push(typeRightBracket);
 				Push(typeLeftBracket);
@@ -365,15 +366,12 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 				if (next == typeEval)
 				{
 					Push(typeSemicolon);
-					Push(N_EXPRESSION);
-					Push(typeEval);
-					Push(N_IDENTIFIER);
+					Push(N_ASSIGNMENT);
 				}
 				else if (next == typeLeftBracket)
 				{
 					Push(typeSemicolon);
 					Push(N_FUNCTION_CALL);
-					Push(N_IDENTIFIER);
 				}
 				else
 				{
@@ -439,12 +437,11 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 
 		case N_FUNCTION_CALL: // <вызов функции> → <идентификатор> △findId △callFunction ()
 			{
+				Push(TRIAD_CALL_FUN);
 				Push(typeRightBracket);
 				Push(typeLeftBracket);
-				Push(TRIAD_CALL_FUN);
 				Push(TRIAD_FIND_FUN);
 				Push(DELTA_CALL_FUNCTION); //Нет
-				Push(DELTA_FIND_ID);
 				Push(N_IDENTIFIER);
 			}
 			break;
@@ -575,10 +572,23 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		case N_ELEMENTARY_EXPRESSION: // <элементарное выражение> → <идентификатор> △findId <элем1> | <константа> | ( <выражение> )
 		    if (lookahead == typeId)
 		    {
-		        Push(N_ELEM1);
-	    		Push(TRIAD_PUSH_SIMPLE);
-		        Push(DELTA_FIND_ID);
-		        Push(N_IDENTIFIER);
+				int next = LookForward(1);
+				if (next == typeLeftBracket)
+				{
+					Push(TRIAD_CALL_FUN);
+					Push(typeRightBracket);
+					Push(typeLeftBracket);
+					Push(TRIAD_FIND_FUN);
+					Push(DELTA_CALL_FUNCTION);
+					Push(N_IDENTIFIER);
+				}
+				else
+				{
+		        	Push(N_ELEM1);
+	    			Push(TRIAD_PUSH_SIMPLE);
+		        	Push(DELTA_FIND_ID);
+		        	Push(N_IDENTIFIER);
+				}
 		    }
 		    else if (lookahead == typeInt || lookahead == typeShort ||
 		             lookahead == typeLong || lookahead == typeFloat)
@@ -832,15 +842,17 @@ void Diagram::DeltaOperation(int delta)
 			break;
 
 		case TRIAD_INIT_FUN: //TODO
+			triadGenerator->deltaInitFunction();
 			Pop();
 			break;
 
 		case TRIAD_CALL_FUN:
-			translate->deltaCallFunction();
+			triadGenerator->deltaCallFunction();
 			Pop();
 			break;
 
-		case TRIAD_FIND_FUN: //TODO
+		case TRIAD_FIND_FUN:
+			translate->deltaFindFunc();
 			Pop();
 			break;
 
