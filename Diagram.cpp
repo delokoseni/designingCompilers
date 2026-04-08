@@ -614,6 +614,25 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			}
 			break;
 
+		case N_NUMBER: // <число> → constInt | constFloat
+			std::cout << "NUMBER LOOKAHEAD " << lookahead << std::endl;
+
+			if (lookahead == constInt)
+			{
+				Push(DELTA_SET_INT_CONST);  // сохранить значение константы
+				Push(constInt);             // съесть терминал
+			}
+			else if (lookahead == constFloat)
+			{
+				Push(DELTA_SET_FLOAT_CONST);
+				Push(constFloat);
+			}
+			else
+			{
+				scaner->PrintError("Ожидалось число", scaner->GetCurrentLex());
+			}
+			break;
+
 		default:
 			type_lex lex;
 			scaner->PrintError("Неизвестный нетерминал в ApplyRule", scaner->GetCurrentLex());

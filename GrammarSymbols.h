@@ -94,8 +94,8 @@ typedef char type_lex[maxLex];
 #define N_IDENTIFIER 329
 #define N_CONSTANT 330
 #define N_INT_CONSTANT 331
-#define N_INT_CONSTANT1 332
-#define N_FLOAT_CONSTANT 333
+#define N_FLOAT_CONSTANT 332
+#define N_NUMBER 333
 
 #define DELTA_START_DECLARE_DATA 400
 #define DELTA_END_DECLARE_DATA 401
