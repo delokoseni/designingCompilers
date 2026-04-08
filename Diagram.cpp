@@ -67,7 +67,7 @@ int Diagram::Run()
 
 	while (!mag.empty())
 	{
-		//PrintStack();
+		PrintStack();
 		int top = Top();
 
 		if (IsTerminal(top))
