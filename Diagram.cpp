@@ -577,7 +577,6 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		    {
 		        Push(N_ELEM1);
 	    		Push(TRIAD_PUSH_SIMPLE);
-		    	std::cout << "Идентификатор LOOKAHEAD " << lookahead << std::endl;
 		        Push(DELTA_FIND_ID);
 		        Push(N_IDENTIFIER);
 		    }
@@ -585,7 +584,6 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		             lookahead == typeLong || lookahead == typeFloat)
 		    { // Константа
 	    		Push(TRIAD_PUSH_CONST); // Добавил
-		    	std::cout << "CONST LOOKAHEAD " << lookahead << "CURRENT LEX " << scaner->GetCurrentLex() << std::endl;
 		        Push(lookahead);
 		    }
 		    else if (lookahead == typeLeftBracket)

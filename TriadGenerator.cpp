@@ -19,10 +19,7 @@ void TriadGenerator::generateTriad(const type_lex operation) {
     Operand firstOperand = this->global->operands.top();
     this->global->operands.pop();
 
-    // Семантические проверки
-    // Проверка на изменение констант
     if (!firstOperand.isLink && operation == "=") {
-        // Попробуем найти в дереве, если это идентификатор
         SemanticTree* pos = this->tree->findUp(this->tree->curNode, firstOperand.lex);
         if (pos != nullptr)
             if (pos->curNode->nodeIsConst(firstOperand.lex)) {
@@ -31,9 +28,7 @@ void TriadGenerator::generateTriad(const type_lex operation) {
             }
     }
 
-    // Инициализация переменной
     if (!secondOperand.isLink) {
-        // Попробуем найти в дереве, если это идентификатор
         SemanticTree* pos = this->tree->findUp(this->tree->curNode, secondOperand.lex);
         if (pos != nullptr)
             this->tree->nodeIsInit(secondOperand.lex);
@@ -124,32 +119,13 @@ void TriadGenerator::deltaAssign() {
     this->generateTriad("=");
 }
 
-/*void TriadGenerator::deltaPushOperand(bool isConst) {
-    DATA_TYPE type = this->global->dataType;
-    this->global->operandTypes.push(type);
-    Operand newOperand;
-    newOperand.isLink = false;
-    newOperand.isConst = isConst;
-    strncpy_s(newOperand.lex, maxLex, this->global->prevLex, maxLex - 1);
-    this->global->operands.push(newOperand);
-}*/
-
 void TriadGenerator::deltaPushOperand(bool isConst) {
     DATA_TYPE type = this->global->dataType;
-
-    std::cout << "PUSH OPERAND: "
-              << this->global->prevLex
-              << " (type=" << type
-              << ", const=" << (isConst ? "true" : "false") << ")"
-              << std::endl;
-
     this->global->operandTypes.push(type);
-
     Operand newOperand;
     newOperand.isLink = false;
     newOperand.isConst = isConst;
     strncpy_s(newOperand.lex, maxLex, this->global->prevLex, maxLex - 1);
-
     this->global->operands.push(newOperand);
 }
 
@@ -173,18 +149,18 @@ void TriadGenerator::printTriad() {
     std::cout << "Triads:" << std::endl;
     for (int i = 0; i < this->global->resultTriads.size(); i++) {
         Triad triad = this->global->resultTriads[i];
-        std::cout << "(" << i << ")" << triad.operation;
+        std::cout << "(" << i << ") " << triad.operation;
         if (triad.firstOperand.number != -1000) {
             if (triad.firstOperand.isLink)
-                std::cout << "(" << triad.firstOperand.number << ")";
+                std::cout << " (" << triad.firstOperand.number << ") ";
             else {
-                std::cout << triad.firstOperand.lex;
+                std::cout << " " << triad.firstOperand.lex << " ";
             }
         }
 
         if (triad.secondOperand.number != -1000) {
             if (triad.secondOperand.isLink)
-                std::cout << "(" << triad.secondOperand.number << ")";
+                std::cout << "(" << triad.secondOperand.number << ") ";
             else {
                 std::cout << triad.secondOperand.lex;
             }

@@ -1,5 +1,6 @@
 #include "Translate.h"
 #include <iostream>
+#include <cctype>
 
 Translate::Translate() {
     global = new GlobalData();
@@ -256,7 +257,13 @@ GlobalData* Translate::getGlobal() {
 void Translate::setLex(int term, type_lex lex) {
     global->prevTerm = term;
 
-    if (term == typeId || term == typeMain) {
+    const unsigned char first = static_cast<unsigned char>(lex[0]);
+    const unsigned char second = static_cast<unsigned char>(lex[1]);
+
+    const bool isIdentifier = (term == typeId || term == typeMain);
+    const bool isNumericConst = std::isdigit(first) || (lex[0] == '.' && std::isdigit(second));
+
+    if (isIdentifier || isNumericConst) {
         strcpy_s(global->prevLex, maxLex, lex);
     }
 }
