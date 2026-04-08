@@ -213,12 +213,10 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			if (lookahead == typeEval) // =
 			{
 				Push(TRIAD_ASSIGN);
-				Push(DELTA_ASSIGN_END); // Нет
+				Push(DELTA_ASSIGN_END);
 				Push(N_EXPRESSION);
-				Push(DELTA_ASSIGN_START); // Нет
+				Push(DELTA_ASSIGN_START);
 				Push(typeEval);
-				Push(TRIAD_PUSH_SIMPLE);
-				Push(TRIAD_INIT);
 			}
 			else if (lookahead == typeComma || lookahead == typeSemicolon)
 			{
@@ -272,6 +270,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 
 		case N_EXPRESSION: // <выражение> → <сравнение> △pushOperand <выражение1>
 			Push(N_EXPRESSION1);
+			Push(DELTA_PUSH_OPERAND);
 			Push(N_COMPARISON);
 			break;
 
@@ -368,6 +367,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 					Push(N_EXPRESSION);
 					Push(typeEval);
 					Push(N_IDENTIFIER);
+					Push(DELTA_FIND_ID);
 				}
 				else if (next == typeLeftBracket)
 				{
@@ -451,6 +451,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 
 		case N_COMPARISON: // <сравнение> → <побитовый сдвиг> △pushOperand <сравнение1>
 		    Push(N_COMPARISON1);
+			Push(DELTA_PUSH_OPERAND);
 		    Push(N_BITWISE_SHIFT);
 		    break;
 
@@ -505,6 +506,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 
 		case N_SUMMAND: // <слагаемое> → <множитель> △pushOperand <слагаемое1>
 			Push(N_SUMMAND1);
+			Push(DELTA_PUSH_OPERAND);
 			Push(N_MULTIPLIER);
 			break;
 
@@ -581,16 +583,15 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		        Push(DELTA_FIND_ID);
 		        Push(N_IDENTIFIER);
 		    }
-		    else if (lookahead == typeInt || lookahead == typeShort ||
-		             lookahead == typeLong || lookahead == typeFloat)
+		    else if (lookahead == constInt || lookahead == constFloat)
 		    { // Константа
-	    		Push(TRIAD_PUSH_CONST); // Добавил
+		    	Push(TRIAD_PUSH_CONST); // как у тебя уже есть
 		    	std::cout << "CONST LOOKAHEAD " << lookahead << std::endl;
-		        Push(lookahead);
+		    	Push(N_NUMBER);
 		    }
 		    else if (lookahead == typeLeftBracket)
 		    {
-	    		Push(TRIAD_PUSH_CONST);
+	    		//Push(TRIAD_PUSH_CONST);
 		        Push(typeRightBracket);
 		        Push(N_EXPRESSION);
 		        Push(typeLeftBracket);
@@ -615,16 +616,14 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			break;
 
 		case N_NUMBER: // <число> → constInt | constFloat
-			std::cout << "NUMBER LOOKAHEAD " << lookahead << std::endl;
-
 			if (lookahead == constInt)
 			{
-				Push(DELTA_SET_INT_CONST);  // сохранить значение константы
+				//Push(DELTA_SET_INT_CONST);  // сохранить значение константы
 				Push(constInt);             // съесть терминал
 			}
 			else if (lookahead == constFloat)
 			{
-				Push(DELTA_SET_FLOAT_CONST);
+				//Push(DELTA_SET_FLOAT_CONST);
 				Push(constFloat);
 			}
 			else
