@@ -847,6 +847,26 @@ void Diagram::DeltaOperation(int delta)
 			Pop();
 			break;
 
+		case TRIAD_PROLOG:
+			triadGenerator->deltaProlog();
+			Pop();
+			break;
+
+		case TRIAD_EPILOG:
+			triadGenerator->deltaEpilog();
+			Pop();
+			break;
+
+		case TRIAD_RET:
+			triadGenerator->deltaReturn();
+			Pop();
+			break;
+
+		case TRIAD_PROC_END:
+			triadGenerator->deltaEndProc();
+			Pop();
+			break;
+
 		case TRIAD_FIND_FUN:
 			translate->deltaFindFunc();
 			Pop();
