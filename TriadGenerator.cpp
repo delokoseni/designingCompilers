@@ -263,3 +263,51 @@ void TriadGenerator::printTriad() {
     }
     std::cout << "\n";
 }
+
+void TriadGenerator::deltaProlog()
+{
+    Triad triad;
+
+    strcpy_s(triad.operation, maxLex, "prolog");
+
+    triad.firstOperand.number = -1000;
+    triad.secondOperand.number = -1000;
+
+    this->global->resultTriads.push_back(triad);
+}
+
+void TriadGenerator::deltaEpilog()
+{
+    Triad triad;
+
+    triad.firstOperand.number = -1000;
+    triad.secondOperand.number = -1000;
+
+    strcpy_s(triad.operation, maxLex, "epilog");
+
+    this->global->resultTriads.push_back(triad);
+}
+
+void TriadGenerator::deltaReturn()
+{
+    Triad triad;
+
+    triad.firstOperand.number = -1000;
+    triad.secondOperand.number = -1000;
+
+    strcpy_s(triad.operation, maxLex, "ret");
+
+    this->global->resultTriads.push_back(triad);
+}
+
+void TriadGenerator::deltaEndProc()
+{
+    Triad triad;
+
+    triad.firstOperand.number = -1000;
+    triad.secondOperand.number = -1000;
+
+    strcpy_s(triad.operation, maxLex, "endp");
+
+    this->global->resultTriads.push_back(triad);
+}
