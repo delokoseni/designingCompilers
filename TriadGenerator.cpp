@@ -167,13 +167,37 @@ void TriadGenerator::deltaCallFunction() {
     this->global->operandTypes.push(returnType);
 }
 
-void TriadGenerator::deltaInitFunction() {
+/*void TriadGenerator::deltaInitFunction() {
     if (this->global->funPtr == nullptr) {
         this->tree->printError("function not selected for entry generation", this->global->prevLex);
         return;
     }
 
     this->tree->setFunStartNumber(this->global->funPtr, static_cast<int>(this->global->resultTriads.size()));
+}*/
+
+void TriadGenerator::deltaInitFunction() {
+    if (this->global->funPtr == nullptr) {
+        this->tree->printError("function not selected for entry generation", this->global->prevLex);
+        return;
+    }
+    Triad procTriad;
+    char* tmp = new char[strlen("proc ") + strlen(this->global->prevLex) + 1];
+    strcpy_s(tmp, strlen("proc ") + 1, "proc ");
+    strcat_s(
+        tmp,
+        strlen("proc ") + strlen(this->global->prevLex) + 1,
+        this->global->prevLex
+    );
+    strncpy_s(procTriad.operation, maxLex, tmp, maxLex - 1);
+    procTriad.firstOperand.number = -1000;
+    procTriad.secondOperand.number = -1000;
+    this->global->resultTriads.push_back(procTriad);
+    delete[] tmp;
+    this->tree->setFunStartNumber(
+        this->global->funPtr,
+        static_cast<int>(this->global->resultTriads.size() - 1)
+    );
 }
 
 void TriadGenerator::deltaWhileStart() {
