@@ -355,6 +355,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			{
 				Push(DELTA_CHECK_RETURN); //Нет и многое иначе
 				Push(typeSemicolon);
+				Push(TRIAD_RETURN_VALUE);
 				Push(N_EXPRESSION);
 				Push(typeReturn);
 			}
