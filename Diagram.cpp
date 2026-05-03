@@ -150,6 +150,9 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 			{
 				Push(DELTA_END_FUNC);
 				Push(DELTA_EXIT_BLOCK);
+				Push(TRIAD_PROC_END);
+				Push(TRIAD_RET);
+				Push(TRIAD_EPILOG);
 				Push(N_COMPOSITE_OPERATOR);
 				Push(DELTA_ENTER_BLOCK);
 				Push(TRIAD_INIT_FUN);
