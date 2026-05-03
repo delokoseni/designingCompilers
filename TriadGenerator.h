@@ -33,6 +33,7 @@ public:
     void deltaShiftRight();
     void deltaEval();
     void deltaUnEval();
+    void deltaReturnValue();
 
     // Присваивание и операнды
     void deltaAssign();

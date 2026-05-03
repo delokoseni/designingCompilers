@@ -335,3 +335,20 @@ void TriadGenerator::deltaEndProc()
 
     this->global->resultTriads.push_back(triad);
 }
+
+void TriadGenerator::deltaReturnValue()
+{
+    Operand value = this->global->operands.top();
+    this->global->operands.pop();
+
+    Triad triad{};
+    strcpy_s(triad.operation, maxLex, "return ");
+
+    triad.firstOperand = value;
+
+    triad.secondOperand.isLink = true;
+    triad.secondOperand.isConst = false;
+    triad.secondOperand.number = -1000;
+
+    this->global->resultTriads.push_back(triad);
+}
