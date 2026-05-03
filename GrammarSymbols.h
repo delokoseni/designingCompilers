@@ -145,4 +145,5 @@ typedef char type_lex[maxLex];
 #define TRIAD_EPILOG 521
 #define TRIAD_RET 522
 #define TRIAD_PROC_END 523
-#define TRIAD_FIND_FUN 524
+#define TRIAD_RETURN_VALUE 524
+#define TRIAD_FIND_FUN 525

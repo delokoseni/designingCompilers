@@ -871,6 +871,11 @@ void Diagram::DeltaOperation(int delta)
 			Pop();
 			break;
 
+		case TRIAD_RETURN_VALUE:
+			triadGenerator->deltaReturnValue();
+			Pop();
+			break;
+
 		case TRIAD_FIND_FUN:
 			translate->deltaFindFunc();
 			Pop();
