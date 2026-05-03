@@ -154,6 +154,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 				Push(DELTA_ENTER_BLOCK);
 				Push(TRIAD_INIT_FUN);
 				Push(DELTA_SET_FUNC);
+				Push(TRIAD_PROLOG);
 				Push(typeRightBracket);
 				Push(typeLeftBracket);
 			}
