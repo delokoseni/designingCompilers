@@ -1,6 +1,10 @@
 #pragma once
 #include "TriadHelper.h"
+#include "SemanticTree.h"
+#include "GrammarSymbols.h"
+
 #include <stack>
+#include <deque>
 
 struct GlobalData {
     // текущая лексема

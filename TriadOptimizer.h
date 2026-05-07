@@ -1,16 +1,15 @@
 #pragma once
-#include "TriadHelper.h"
-#include <vector>
+
+#include "GlobalData.h"
 
 class TriadOptimizer
 {
 private:
-    std::vector<Triad>* triads;
+    GlobalData* global;
     void constantFolding();
     void commonSubexpressionElimination();
 
 public:
-    void setTriads(std::vector<Triad>* triads);
-
+    void setTriads(GlobalData* global);
     void optimize();
 };

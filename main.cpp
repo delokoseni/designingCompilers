@@ -5,6 +5,8 @@
 #include <windows.h>
 #include <fstream>
 
+#include "TriadOptimizer.h"
+
 int main()
 {
     SetConsoleCP(CP_UTF8);
@@ -12,6 +14,7 @@ int main()
     Scaner* scaner = new Scaner("input.txt");
     Translate* translate = new Translate();
     Diagram* diagram = new Diagram(scaner, translate);
+    TriadOptimizer* optimizer = new TriadOptimizer();
 
     diagram->Run();
 
@@ -20,6 +23,11 @@ int main()
     if (type == typeEnd) {
         std::cout << "OK" << std::endl;
         translate->printTree();
+        diagram->printTriad();
+        optimizer->setTriads(translate->getGlobal());
+        optimizer->optimize();
+
+        std::cout << "\nOptimized triads:\n";
         diagram->printTriad();
     }
     else
