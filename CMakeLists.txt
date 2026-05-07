@@ -16,4 +16,6 @@ add_executable(designingCompilers main.cpp
         GlobalData.h
         TriadHelper.h
         TriadGenerator.cpp
-        TriadGenerator.h)
+        TriadGenerator.h
+        TriadOptimizer.cpp
+        TriadOptimizer.h)

@@ -133,7 +133,6 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 				lookahead == typeLong || lookahead == typeFloat)
 			{
 				Push(N_DESCRIPTION1);
-				//Push(DELTA_SET_ID); //Вызывает проблемы
 				Push(N_IDENTIFIER);
 				Push(N_TYPE);
 			}
@@ -552,13 +551,11 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		    }
 		    break;
 
-		//TODO Разобраться с Push TRIAD_***
 		case N_UNARY_OPERATION: // <унарная операция> → <знак> <элементарное выражение>
 			Push(N_ELEMENTARY_EXPRESSION);
 			Push(N_SIGN);
 			break;
 
-		//TODO Разобраться с Push TRIAD_***
 		case N_SIGN: // <знак> → + | - | ε
 			if (lookahead == typePlus || lookahead == typeMinus)
 			{
@@ -569,7 +566,6 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 				eps();
 			}
 			break;
-		//TODO Потенциально содержит ошибку
 		case N_ELEMENTARY_EXPRESSION: // <элементарное выражение> → <идентификатор> △findId <элем1> | <константа> | ( <выражение> )
 		    if (lookahead == typeId)
 		    {
@@ -609,7 +605,6 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		        scaner->PrintError("Ошибка в <элементарное выражение>", scaner->GetCurrentLex());
 		    }
 		    break;
-		//TODO Разобраться с Push TRIAD_***
 		case N_ELEM1: // <элем1> → () | ε
 			if (lookahead == typeLeftBracket)
 			{
