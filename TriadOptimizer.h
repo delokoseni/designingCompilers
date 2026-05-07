@@ -8,6 +8,7 @@ private:
     GlobalData* global;
     void constantFolding();
     void commonSubexpressionElimination();
+    void deadCodeElimination();
 
 public:
     void setTriads(GlobalData* global);
