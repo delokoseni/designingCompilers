@@ -595,7 +595,7 @@ void Diagram::ApplyRule(int nonterm, int lookahead)
 		    }
 		    else if (lookahead == typeLeftBracket)
 		    {
-	    		Push(TRIAD_PUSH_CONST);
+	    		//Push(TRIAD_PUSH_CONST);
 		        Push(typeRightBracket);
 		        Push(N_EXPRESSION);
 		        Push(typeLeftBracket);
