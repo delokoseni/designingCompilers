@@ -9,6 +9,7 @@ private:
     void constantFolding();
     void commonSubexpressionElimination();
     void deadCodeElimination();
+    bool sameOperand(const Operand& a, const Operand& b);
 
 public:
     void setTriads(GlobalData* global);

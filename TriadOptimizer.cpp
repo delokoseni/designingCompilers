@@ -7,8 +7,8 @@
 void TriadOptimizer::optimize()
 {
     constantFolding();
-    deadCodeElimination();
     commonSubexpressionElimination();
+    deadCodeElimination();
 }
 
 void TriadOptimizer::constantFolding()
@@ -192,8 +192,181 @@ void TriadOptimizer::constantFolding()
     }
 }
 
-void TriadOptimizer::commonSubexpressionElimination() {
+void TriadOptimizer::commonSubexpressionElimination()
+{
+    int size = global->resultTriads.size();
 
+    for (int i = 0; i < size; i++)
+    {
+        Triad& first = global->resultTriads[i];
+
+        const char* op = first.operation;
+
+        bool isSupportedOperation =
+            strcmp(op, "+") == 0 ||
+            strcmp(op, "-") == 0 ||
+            strcmp(op, "*") == 0 ||
+            strcmp(op, "/") == 0 ||
+            strcmp(op, "%") == 0 ||
+            strcmp(op, "<<") == 0 ||
+            strcmp(op, ">>") == 0 ||
+            strcmp(op, "<") == 0 ||
+            strcmp(op, "<=") == 0 ||
+            strcmp(op, ">") == 0 ||
+            strcmp(op, ">=") == 0 ||
+            strcmp(op, "==") == 0 ||
+            strcmp(op, "!=") == 0;
+
+        if (!isSupportedOperation)
+            continue;
+
+        for (int j = i + 1; j < size; j++)
+        {
+            Triad& second = global->resultTriads[j];
+
+            // triad уже удалена
+            if (second.operation[0] == '\0')
+                continue;
+
+            if (strcmp(first.operation, second.operation) != 0)
+                continue;
+
+            bool sameFirst =
+                sameOperand(first.firstOperand,
+                            second.firstOperand);
+
+            bool sameSecond =
+                sameOperand(first.secondOperand,
+                            second.secondOperand);
+
+            if (!sameFirst || !sameSecond)
+                continue;
+
+            // проверка модификации переменных
+            bool modified = false;
+
+            for (int k = i + 1; k < j; k++)
+            {
+                Triad& middle = global->resultTriads[k];
+
+                if (strcmp(middle.operation, "=") != 0)
+                    continue;
+
+                const char* changedVar =
+                    middle.firstOperand.lex;
+
+                if (!first.firstOperand.isConst &&
+                    !first.firstOperand.isLink &&
+                    strcmp(first.firstOperand.lex,
+                           changedVar) == 0)
+                {
+                    modified = true;
+                }
+
+                if (!first.secondOperand.isConst &&
+                    !first.secondOperand.isLink &&
+                    strcmp(first.secondOperand.lex,
+                           changedVar) == 0)
+                {
+                    modified = true;
+                }
+            }
+
+            if (modified)
+                continue;
+
+            // заменить ссылки j -> i
+            for (int k = 0; k < size; k++)
+            {
+                Triad& triad = global->resultTriads[k];
+
+                Operand* operands[2] =
+                {
+                    &triad.firstOperand,
+                    &triad.secondOperand
+                };
+
+                for (int m = 0; m < 2; m++)
+                {
+                    Operand* opnd = operands[m];
+
+                    if (opnd->isLink &&
+                        opnd->number == j)
+                    {
+                        opnd->number = i;
+                    }
+                }
+            }
+
+            // полная очистка triad
+            second.operation[0] = '\0';
+
+            second.firstOperand.isConst = false;
+            second.firstOperand.isLink = false;
+            second.firstOperand.isFunc = false;
+            second.firstOperand.number = -1;
+            second.firstOperand.lex[0] = '\0';
+
+            second.secondOperand.isConst = false;
+            second.secondOperand.isLink = false;
+            second.secondOperand.isFunc = false;
+            second.secondOperand.number = -1;
+            second.secondOperand.lex[0] = '\0';
+        }
+    }
+
+    // удаление пустых triad
+    std::deque<Triad> newTriads;
+
+    std::vector<int> newIndices(size, -1);
+
+    for (int i = 0; i < size; i++)
+    {
+        if (global->resultTriads[i].operation[0] == '\0')
+            continue;
+
+        newIndices[i] = newTriads.size();
+
+        newTriads.push_back(global->resultTriads[i]);
+    }
+
+    // обновление ссылок
+    for (auto& triad : newTriads)
+    {
+        Operand* operands[2] =
+        {
+            &triad.firstOperand,
+            &triad.secondOperand
+        };
+
+        for (int i = 0; i < 2; i++)
+        {
+            Operand* op = operands[i];
+
+            if (!op->isLink)
+                continue;
+
+            int oldIndex = op->number;
+
+            if (oldIndex < 0 || oldIndex >= size)
+            {
+                op->isLink = false;
+                op->number = -1;
+                continue;
+            }
+
+            if (newIndices[oldIndex] == -1)
+            {
+                op->isLink = false;
+                op->number = -1;
+                continue;
+            }
+
+            op->number = newIndices[oldIndex];
+        }
+    }
+
+    global->resultTriads = newTriads;
 }
 
 void TriadOptimizer::setTriads(GlobalData* global){
@@ -278,9 +451,17 @@ void TriadOptimizer::deadCodeElimination()
 
             int oldIndex = op->number;
 
-            if (oldIndex < 0 ||
-                oldIndex >= size)
+            if (oldIndex < 0 || oldIndex >= size)
             {
+                op->isLink = false;
+                op->number = -1;
+                continue;
+            }
+
+            if (newIndices[oldIndex] == -1)
+            {
+                op->isLink = false;
+                op->number = -1;
                 continue;
             }
 
@@ -289,4 +470,23 @@ void TriadOptimizer::deadCodeElimination()
     }
 
     global->resultTriads = newTriads;
+}
+
+bool TriadOptimizer::sameOperand(const Operand &a, const Operand &b) {
+    if (a.isConst != b.isConst)
+        return false;
+
+    if (a.isLink != b.isLink)
+        return false;
+
+    if (a.isFunc != b.isFunc)
+        return false;
+
+    if (strcmp(a.lex, b.lex) != 0)
+        return false;
+
+    if (a.isLink && a.number != b.number)
+        return false;
+
+    return true;
 }
