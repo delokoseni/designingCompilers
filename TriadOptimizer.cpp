@@ -82,84 +82,141 @@ void TriadOptimizer::constantFolding()
                 continue;
             }
 
-            int left = atoi(triad.firstOperand.lex);
-            int right = atoi(triad.secondOperand.lex);
+            bool isFloat =
+                strchr(triad.firstOperand.lex, '.') != nullptr ||
+                strchr(triad.secondOperand.lex, '.') != nullptr;
 
-            int result = 0;
+            if (isFloat)
+            {
+                float left = atof(triad.firstOperand.lex);
+                float right = atof(triad.secondOperand.lex);
 
-            if (strcmp(op, "+") == 0)
-            {
-                result = left + right;
-            }
-            else if (strcmp(op, "-") == 0)
-            {
-                result = left - right;
-            }
-            else if (strcmp(op, "*") == 0)
-            {
-                result = left * right;
-            }
-            else if (strcmp(op, "/") == 0)
-            {
-                if (right == 0)
+                float result = 0;
+
+                if (strcmp(op, "+") == 0)
+                {
+                    result = left + right;
+                }
+                else if (strcmp(op, "-") == 0)
+                {
+                    result = left - right;
+                }
+                else if (strcmp(op, "*") == 0)
+                {
+                    result = left * right;
+                }
+                else if (strcmp(op, "/") == 0)
+                {
+                    if (right == 0.0)
+                        continue;
+
+                    result = left / right;
+                }
+                else
+                {
                     continue;
+                }
 
-                result = left / right;
-            }
-            else if (strcmp(op, "%") == 0)
-            {
-                if (right == 0)
-                    continue;
+                strcpy_s(triad.operation, "=");
 
-                result = left % right;
-            }
-            else if (strcmp(op, "<<") == 0)
-            {
-                result = left << right;
-            }
-            else if (strcmp(op, ">>") == 0)
-            {
-                result = left >> right;
-            }
-            else if (strcmp(op, "<") == 0)
-            {
-                result = left < right;
-            }
-            else if (strcmp(op, "<=") == 0)
-            {
-                result = left <= right;
-            }
-            else if (strcmp(op, ">") == 0)
-            {
-                result = left > right;
-            }
-            else if (strcmp(op, ">=") == 0)
-            {
-                result = left >= right;
-            }
-            else if (strcmp(op, "==") == 0)
-            {
-                result = left == right;
-            }
-            else if (strcmp(op, "!=") == 0)
-            {
-                result = left != right;
-            }
+                triad.firstOperand.isConst = false;
+                triad.firstOperand.isLink = false;
+                triad.firstOperand.isFunc = false;
+                triad.firstOperand.lex[0] = '\0';
 
-            strcpy_s(triad.operation, "=");
+                triad.secondOperand.isConst = true;
+                triad.secondOperand.isLink = false;
+                triad.secondOperand.isFunc = false;
 
-            triad.firstOperand.isConst = false;
-            triad.firstOperand.isLink = false;
-            triad.firstOperand.isFunc = false;
-            triad.firstOperand.lex[0] = '\0';
+                sprintf_s(triad.secondOperand.lex,
+                          "%.6f",
+                          result);
 
-            triad.secondOperand.isConst = true;
-            triad.secondOperand.isLink = false;
-            triad.secondOperand.isFunc = false;
+                changed = true;
+            }
+            else
+            {
+                int left = atoi(triad.firstOperand.lex);
+                int right = atoi(triad.secondOperand.lex);
 
-            sprintf_s(triad.secondOperand.lex, "%d", result);
+                int result = 0;
 
-            changed = true;
+                if (strcmp(op, "+") == 0)
+                {
+                    result = left + right;
+                }
+                else if (strcmp(op, "-") == 0)
+                {
+                    result = left - right;
+                }
+                else if (strcmp(op, "*") == 0)
+                {
+                    result = left * right;
+                }
+                else if (strcmp(op, "/") == 0)
+                {
+                    if (right == 0)
+                        continue;
+
+                    result = left / right;
+                }
+                else if (strcmp(op, "%") == 0)
+                {
+                    if (right == 0)
+                        continue;
+
+                    result = left % right;
+                }
+                else if (strcmp(op, "<<") == 0)
+                {
+                    result = left << right;
+                }
+                else if (strcmp(op, ">>") == 0)
+                {
+                    result = left >> right;
+                }
+                else if (strcmp(op, "<") == 0)
+                {
+                    result = left < right;
+                }
+                else if (strcmp(op, "<=") == 0)
+                {
+                    result = left <= right;
+                }
+                else if (strcmp(op, ">") == 0)
+                {
+                    result = left > right;
+                }
+                else if (strcmp(op, ">=") == 0)
+                {
+                    result = left >= right;
+                }
+                else if (strcmp(op, "==") == 0)
+                {
+                    result = left == right;
+                }
+                else if (strcmp(op, "!=") == 0)
+                {
+                    result = left != right;
+                }
+
+                strcpy_s(triad.operation, "=");
+
+                triad.firstOperand.isConst = false;
+                triad.firstOperand.isLink = false;
+                triad.firstOperand.isFunc = false;
+                triad.firstOperand.lex[0] = '\0';
+
+                triad.secondOperand.isConst = true;
+                triad.secondOperand.isLink = false;
+                triad.secondOperand.isFunc = false;
+
+                sprintf_s(triad.secondOperand.lex,
+                          "%d",
+                          result);
+
+                changed = true;
+            }
         }
     }
 
@@ -191,7 +248,6 @@ void TriadOptimizer::constantFolding()
                  linked.secondOperand.lex);
     }
 }
-
 void TriadOptimizer::commonSubexpressionElimination()
 {
     int size = global->resultTriads.size();
@@ -231,18 +287,16 @@ void TriadOptimizer::commonSubexpressionElimination()
             if (strcmp(first.operation, second.operation) != 0)
                 continue;
 
-            bool sameFirst =
-                sameOperand(first.firstOperand,
-                            second.firstOperand);
+            bool sameDirect =sameOperand(first.firstOperand, second.firstOperand) &&
+                sameOperand(first.secondOperand,second.secondOperand);
 
-            bool sameSecond =
-                sameOperand(first.secondOperand,
-                            second.secondOperand);
+            bool sameSwapped = isCommutative(first.operation) &&
+                sameOperand(first.firstOperand, second.secondOperand) &&
+                sameOperand(first.secondOperand,second.firstOperand);
 
-            if (!sameFirst || !sameSecond)
+            if (!sameDirect && !sameSwapped)
                 continue;
 
-            // проверка модификации переменных
             bool modified = false;
 
             for (int k = i + 1; k < j; k++)
@@ -275,7 +329,6 @@ void TriadOptimizer::commonSubexpressionElimination()
             if (modified)
                 continue;
 
-            // заменить ссылки j -> i
             for (int k = 0; k < size; k++)
             {
                 Triad& triad = global->resultTriads[k];
@@ -298,15 +351,12 @@ void TriadOptimizer::commonSubexpressionElimination()
                 }
             }
 
-            // полная очистка triad
             second.operation[0] = '\0';
-
             second.firstOperand.isConst = false;
             second.firstOperand.isLink = false;
             second.firstOperand.isFunc = false;
             second.firstOperand.number = -1;
             second.firstOperand.lex[0] = '\0';
-
             second.secondOperand.isConst = false;
             second.secondOperand.isLink = false;
             second.secondOperand.isFunc = false;
@@ -315,7 +365,6 @@ void TriadOptimizer::commonSubexpressionElimination()
         }
     }
 
-    // удаление пустых triad
     std::deque<Triad> newTriads;
 
     std::vector<int> newIndices(size, -1);
@@ -330,7 +379,6 @@ void TriadOptimizer::commonSubexpressionElimination()
         newTriads.push_back(global->resultTriads[i]);
     }
 
-    // обновление ссылок
     for (auto& triad : newTriads)
     {
         Operand* operands[2] =
@@ -489,4 +537,13 @@ bool TriadOptimizer::sameOperand(const Operand &a, const Operand &b) {
         return false;
 
     return true;
+}
+
+bool TriadOptimizer::isCommutative(const char* op)
+{
+    return
+        strcmp(op, "+") == 0 ||
+        strcmp(op, "*") == 0 ||
+        strcmp(op, "==") == 0 ||
+        strcmp(op, "!=") == 0;
 }

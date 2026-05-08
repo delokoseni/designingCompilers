@@ -10,6 +10,7 @@ private:
     void commonSubexpressionElimination();
     void deadCodeElimination();
     bool sameOperand(const Operand& a, const Operand& b);
+    bool isCommutative(const char* op);
 
 public:
     void setTriads(GlobalData* global);
